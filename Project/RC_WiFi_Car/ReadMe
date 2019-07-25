@@ -16,6 +16,7 @@
 				API KEY
 
 --> WiFi Server http://192.168.4.1/?MakerCar=
+API : Speed=100,Buzzer=1,Servo=1,Controller=1,LedCam=1,
 --> Keyword 
 	+ Speed : from 0 to 100 (%) normal speed*2.53
 	+ Buzzer: sw(bz) : 0 -> OFF , 1 -> ON

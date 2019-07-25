@@ -2,11 +2,11 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 
-const char* ssid = "CarHshop";
-const char* pass = "123456789";
+const char* ssid = "Maker_RC_Car";
+const char* pass = "makerbot123";
 ESP8266WebServer server(80);
 
-String command, lastcommand ="hshop";
+String command, lastcommand = "makershop";
 
 void setup() {
   Serial.begin(115200);
@@ -25,12 +25,18 @@ void setup() {
 }
 
 void loop() {
-  server.handleClient();
-  command = server.arg("HshopWiFiCar");
-  if (command != "" && command != lastcommand)
+  server.handleCleient();
+  command = server.arg("MakerCar");
+  //  if (command != "" && command != lastcommand)
+  //  {
+  //    Serial.println(command);
+  //    lastcommand = command;
+  //    command = "";
+  //  }
+
+  if (command != "")
   {
     Serial.println(command);
-    lastcommand = command;
     command = "";
   }
 
@@ -38,8 +44,8 @@ void loop() {
 
 void HTTP_handleRoot(void) {
 
-  if ( server.hasArg("HshopWiFiCar") ) {
-    Serial.println(server.arg("HshopWiFiCar"));
+  if ( server.hasArg("MakerCar") ) {
+    Serial.println(server.arg("MakerCar"));
   }
   server.send ( 200, "text/html", "" );
   delay(1);
