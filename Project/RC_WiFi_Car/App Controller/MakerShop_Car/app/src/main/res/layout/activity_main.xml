@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/darkblue"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <WebView
+            android:id="@+id/CameraView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"></WebView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="400dp"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:id="@+id/layout_joystick"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginBottom="32dp"
+                    android:background="@drawable/joystickbackground">
+
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+            <WebView
+                android:id="@+id/WebViewSend"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible">
+
+            </WebView>
+
+            <ImageView
+                android:id="@+id/imageViewHorn"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="20dp"
+                android:src="@drawable/horn" />
+
+            <ImageView
+                android:id="@+id/imageViewLed"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="20dp"
+                android:layout_toLeftOf="@id/imageViewHorn"
+                android:src="@drawable/lightoff" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imageViewSpeaker"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_toRightOf="@id/imageWiFi"
+                    app:srcCompat="@drawable/ic_volume_on" />
+
+                <ImageView
+                    android:id="@+id/imageWiFi"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_toRightOf="@id/imageViewSetting"
+                    app:srcCompat="@drawable/ic_wifi" />
+
+                <ImageView
+                    android:id="@+id/imageViewSetting"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    app:srcCompat="@drawable/ic_settings" />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/imageInfo"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                app:srcCompat="@drawable/ic_info" />
+
+            <ImageView
+                android:id="@+id/imageViewBatery"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_toLeftOf="@id/imageInfo"
+                app:srcCompat="@drawable/ic_battery_80" />
+
+            <LinearLayout
+                android:id="@+id/layout_seekbar"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/TextViewCarSpeed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Car Speed"
+                    android:textColor="#ffff"
+                    android:textSize="20sp" />
+
+                <SeekBar
+                    android:id="@+id/seekbarSpeed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:min="0"
+                    android:progress="60"
+                    android:progressDrawable="@drawable/trackred"
+                    android:thumb="@drawable/thumred" />
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+
+    </FrameLayout>
+</RelativeLayout>

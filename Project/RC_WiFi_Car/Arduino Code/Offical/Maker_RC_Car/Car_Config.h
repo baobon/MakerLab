@@ -15,6 +15,14 @@
 #define SERVO_Left        40
 #define SERVO_GO_RIGHT    95
 #define SERVO_RIGHT       110
-#define SERVO_GO          80
+#define SERVO_GO          75
+
+#define BackWard          0
+#define ForWard           1
+#define TimeOut           500
+
+#define LeftMotor         1
+#define RightMotor        2
+
 
 #endif

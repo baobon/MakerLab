@@ -4,11 +4,11 @@
 
 String c_buzzer, c_controller, c_speed, c_ledcam;
 
-Vietduino_Led myBuzzer(PIN_BUZZER, ACTIVE_SIGNAL_BUZZER);
+//Vietduino_Led myBuzzer(PIN_BUZZER, ACTIVE_SIGNAL_BUZZER);
 Vietduino_Led ledBoard(13, 1);
 Vietduino_Servo myServo;
+Vietduino_DCmotor   myMotor(RightMotor);
 
-//API KEY  =
 
 CREATE_FUNCTION(B_Main)
 {
@@ -25,6 +25,8 @@ CREATE_FUNCTION(ReadSerial)
 {
   wifiSerial.begin(115200);
   DB_SERIAL_KXN("Start");
+  myServo.begin(PIN_SERVO);
+  myServo.write(SERVO_GO);
 
   while (1)
   {
@@ -117,115 +119,81 @@ String splitString(String v_G_motherString, String v_G_Command, String v_G_Start
   }
 }
 
+void checkController(String b_controller, String b_speed,
+                     String b_buzzer)
+{
+  //Check Controller
+  /*
+     Tiến 1    Lùi 2     Phải 3     Trái 4     Tiến Trái 5
+     Tiến Phải 6    Lùi Trái 7    Lùi Phải 8     Dừng 9
+  */
+  int _speed_ = b_speed.toInt() * 2.54;
+  int _controllers_ = b_controller.toInt();
+  switch (_controllers_)
+  {
+    case 1:
+      // myMotor.forward(_speed_);
+      //    myLedLeft.write(100, 100, 4);
+      //    myLedRight.write(100, 100, 4);
+      myMotor.write(ForWard, _speed_, TimeOut);
+      myServo.write(SERVO_GO);
+      break;
+    case 2:
+      //    myLedLeft.write(100, 100, 4);
+      //    myLedRight.write(100, 100, 4);
+      myMotor.write(BackWard, _speed_, TimeOut);
+      myServo.write(SERVO_GO);
+      break;
+    case 3:
+      //    myLedRight.write(100, 100, 4);
+      // myLedLeft.stop();
+      myMotor.write(ForWard, _speed_, TimeOut);
+      myServo.write(SERVO_RIGHT);
+      break;
+    case 4:
+      //    myLedLeft.write(100, 100, 4);
+      // myLedRight.stop();
+      myMotor.write(ForWard, _speed_, TimeOut);
+      myServo.write(SERVO_Left);
+      break;
+    case 5:
+      myMotor.write(ForWard, _speed_, TimeOut);
+      myServo.write(SERVO_GO_LEFT);
+      //    myLedLeft.write(100, 100, 4);
+      // myLedRight.stop();
+      break;
+    case 6:
+      myMotor.write(ForWard, _speed_, TimeOut);
+      myServo.write(SERVO_GO_RIGHT);
+      //    myLedRight.write(100, 100, 4);
+      // myLedRight.stop();
+      break;
+    case 7:
+      myMotor.write(BackWard, _speed_, TimeOut);
+      myServo.write(SERVO_GO_LEFT);
+      //    myLedLeft.write(100, 100, 4);
+      // myLedRight.stop();
+      break;
+    case 8:
+      myMotor.write(BackWard, _speed_, TimeOut);
+      myServo.write(SERVO_GO_RIGHT);
+      //    myLedRight.write(100, 100, 4);
+      // myLedLeft.stop();
+      break;
+    case 9:
+      myMotor.stop();
+      break;
+  }
+}
+
+
 void handlingdata(String data)
 {
   c_speed = splitString(data, "Speed", "=", ",", 1);
   c_buzzer = splitString(data, "Buzzer", "=", ",", 1);
   c_controller = splitString(data, "Controller", "=", ",", 1);
   c_ledcam = splitString(data, "LedCam", "=", ",", 1);
-  DB_SERIAL_KXN("_speed: " + c_speed);
-  DB_SERIAL_KXN("_buzzer: " + c_buzzer);
-  DB_SERIAL_KXN("_controller: " + c_controller);
-  DB_SERIAL_KXN("_ledcam: " + c_ledcam);
   c_ledcam == "1" ? Serial.println("ledon") : Serial.println("ledoff");
+  checkController(c_controller, c_speed, c_buzzer);
 
 }
-
-//void checkController(String b_controller, String b_speed,
-//                     String b_buzzer, String b_ledLeft, String b_ledRight)
-//{
-//  // Check Buzzer
-//  if (b_buzzer == "1" && myBuzzer.isRunning() == false)
-//  {
-//    myBuzzer.write(100, 100, 4);
-//  }
-//  else if (b_buzzer == "0" && myBuzzer.isRunning() == true)
-//  {
-//    myBuzzer.stop();
-//  }
-//
-//  //Check Light
-//  // if (b_ledLeft == "1" && myLedLeft.isRunning() == false)
-//  // {
-//  //   myLedLeft.write(5000, 1);
-//  // }
-//  // else if (b_ledLeft == "0" && myLedLeft.isRunning() == true)
-//  // {
-//  //   myLedLeft.stop();
-//  // }
-//  // if (b_ledRight == "1" && myLedRight.isRunning() == false)
-//  // {
-//  //   myLedRight.write(5000, 1);
-//  // }
-//  // else if (b_ledRight == "0" && myLedRight.isRunning() == true)
-//  // {
-//  //   myLedRight.stop();
-//  // }
-//
-//  //Check Controller
-//  /*
-//     Tiến 1    Lùi 2     Phải 3     Trái 4     Tiến Trái 5
-//     Tiến Phải 6    Lùi Trái 7    Lùi Phải 8     Dừng 9
-//  */
-//  int _speed_ = b_speed.toInt() * 2.54;
-//  int _controllers_ = b_controller.toInt();
-//  static uint8_t tmpDirectionBackward = _V_DIR_BACKWARD_;
-//  static uint8_t tmpDirectionForward = _V_DIR_FORWARD_;
-//  unsigned long timeMotor = 500;
-//  switch (_controllers_)
-//  {
-//  case 1:
-//    // myMotor.forward(_speed_);
-//    myLedLeft.write(100, 100, 4);
-//    myLedRight.write(100, 100, 4);
-//    myMotor.write(tmpDirectionForward, _speed_, timeMotor);
-//    myServo.write(SERVO_GO);
-//    break;
-//  case 2:
-//    myLedLeft.write(100, 100, 4);
-//    myLedRight.write(100, 100, 4);
-//    myMotor.write(tmpDirectionBackward, _speed_, timeMotor);
-//    myServo.write(SERVO_GO);
-//    break;
-//  case 3:
-//    myLedRight.write(100, 100, 4);
-//    // myLedLeft.stop();
-//    myMotor.write(tmpDirectionForward, _speed_, timeMotor);
-//    myServo.write(SERVO_RIGHT);
-//    break;
-//  case 4:
-//    myLedLeft.write(100, 100, 4);
-//    // myLedRight.stop();
-//    myMotor.write(tmpDirectionForward, _speed_, timeMotor);
-//    myServo.write(SERVO_Left);
-//    break;
-//  case 5:
-//    myMotor.write(tmpDirectionForward, _speed_, timeMotor);
-//    myServo.write(SERVO_GO_LEFT);
-//    myLedLeft.write(100, 100, 4);
-//    // myLedRight.stop();
-//    break;
-//  case 6:
-//    myMotor.write(tmpDirectionForward, _speed_, timeMotor);
-//    myServo.write(SERVO_GO_RIGHT);
-//    myLedRight.write(100, 100, 4);
-//    // myLedRight.stop();
-//    break;
-//  case 7:
-//    myMotor.write(tmpDirectionBackward, _speed_, timeMotor);
-//    myServo.write(SERVO_GO_LEFT);
-//    myLedLeft.write(100, 100, 4);
-//    // myLedRight.stop();
-//    break;
-//  case 8:
-//    myMotor.write(tmpDirectionBackward, _speed_, timeMotor);
-//    myServo.write(SERVO_GO_RIGHT);
-//    myLedRight.write(100, 100, 4);
-//    // myLedLeft.stop();
-//    break;
-//  case 9:
-//    myMotor.stop();
-//    break;
-//  }
-//}
-//

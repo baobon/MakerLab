@@ -231,7 +231,7 @@ void setup() {
 
   if (psramFound()) {
     config.frame_size = FRAMESIZE_SVGA;
-    config.jpeg_quality = 10;
+    config.jpeg_quality = 12;
     config.fb_count = 2;
   } else {
     config.frame_size = FRAMESIZE_VGA;
