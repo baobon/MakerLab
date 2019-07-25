@@ -19,7 +19,7 @@
 
 #define BackWard          0
 #define ForWard           1
-#define TimeOut           500
+#define TimeOut           50000
 
 #define LeftMotor         1
 #define RightMotor        2

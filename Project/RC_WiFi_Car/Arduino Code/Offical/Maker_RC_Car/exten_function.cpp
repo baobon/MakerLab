@@ -3,7 +3,7 @@
 #include "Car_Config.h"
 
 String c_buzzer, c_controller, c_speed, c_ledcam;
-
+String lastcommand = "Maker";
 //Vietduino_Led myBuzzer(PIN_BUZZER, ACTIVE_SIGNAL_BUZZER);
 Vietduino_Led ledBoard(13, 1);
 Vietduino_Servo myServo;
@@ -27,7 +27,7 @@ CREATE_FUNCTION(ReadSerial)
   DB_SERIAL_KXN("Start");
   myServo.begin(PIN_SERVO);
   myServo.write(SERVO_GO);
-
+  pinMode(PIN_BUZZER,OUTPUT);
   while (1)
   {
 
@@ -37,6 +37,8 @@ CREATE_FUNCTION(ReadSerial)
       if (command != "") {
         DB_SERIAL_KXN(command);
         handlingdata(command);
+        command = "";
+        lastcommand = command;
       }
       // DB_SERIAL_KXN(command);
       // handlingdata(command);
@@ -121,7 +123,15 @@ String splitString(String v_G_motherString, String v_G_Command, String v_G_Start
 
 void checkController(String b_controller, String b_speed,
                      String b_buzzer)
-{
+{ 
+  /*
+   * Check Buzzer
+   */
+
+   b_buzzer == "1"? tone(PIN_BUZZER,3000) :noTone(PIN_BUZZER);
+
+
+  
   //Check Controller
   /*
      Tiến 1    Lùi 2     Phải 3     Trái 4     Tiến Trái 5

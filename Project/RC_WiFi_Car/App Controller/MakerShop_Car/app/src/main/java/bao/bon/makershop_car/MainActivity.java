@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import bao.bon.makershop_car.Common.CommonAPI;
 import bao.bon.makershop_car.JoyStick.JoyStickClass;
@@ -31,9 +32,13 @@ public class MainActivity extends AppCompatActivity {
     //CommonAPI
     CommonAPI commonAPI;
     //Led & Buzzer & Speed
-    ImageView imgLed,imgBuzzer;
+    ImageView imgLed, imgBuzzer;
     TextView txtSpeed;
     SeekBar seekBarSpeed;
+
+    //Setting Info
+
+    ImageView imgInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +67,11 @@ public class MainActivity extends AppCompatActivity {
         imgLed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(commonAPI.getLedCam() == "0"){
+                if (commonAPI.getLedCam() == "0") {
                     imgLed.setImageResource(R.drawable.lighton);
                     commonAPI.setLedCam("1");
                     sendAPI();
-                }else if (commonAPI.getLedCam() == "1"){
+                } else if (commonAPI.getLedCam() == "1") {
                     imgLed.setImageResource(R.drawable.lightoff);
                     commonAPI.setLedCam("0");
                     sendAPI();
@@ -74,14 +79,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     private void BuzzerHanding() {
+
+//          //Touch Down , Touch Up
+//        imgBuzzer.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//
+//                if(motionEvent.getAction() == MotionEvent.ACTION_UP){
+//                    Toast.makeText(MainActivity.this, "Up", Toast.LENGTH_SHORT).show();
+//                    commonAPI.setBuzzer("0");
+//                    sendAPI();
+//                }
+//                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+//                    Toast.makeText(MainActivity.this, "Down", Toast.LENGTH_SHORT).show();
+//                    commonAPI.setBuzzer("1");
+//                    sendAPI();
+//                }
+//                return false;
+//            }
+//        });
         imgBuzzer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(commonAPI.getBuzzer() == "0") {
                     commonAPI.setBuzzer("1");
                     sendAPI();
-                    commonAPI.setBuzzer("0");
                 }else if (commonAPI.getBuzzer() == "1"){
                     commonAPI.setBuzzer("0");
                     sendAPI();
@@ -89,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     private void SpeedHanding() {
         seekBarSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -127,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
         lt_joystick.setOnTouchListener(onTouchListener());
 
     }
+
     private View.OnTouchListener onTouchListener() {
         return new View.OnTouchListener() {
             @Override
@@ -171,10 +197,12 @@ public class MainActivity extends AppCompatActivity {
             }
         };
     }
+
     private void sendAPI() {
         webViewSend.setWebViewClient(new WebViewClient());
         webViewSend.loadUrl("http://192.168.4.1/?MakerCar=" + convertString());
     }
+
     private String convertString() {
         return
                 "Speed=" + commonAPI.getSpeed() +
@@ -182,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
                         ",Controller=" + commonAPI.getController() +
                         ",LedCam=" + commonAPI.getLedCam() + ",";
     }
+
     private void InnitView() {
         lt_joystick = findViewById(R.id.layout_joystick);
         cameraView = findViewById(R.id.CameraView);
@@ -190,7 +219,9 @@ public class MainActivity extends AppCompatActivity {
         imgBuzzer = findViewById(R.id.imageViewHorn);
         txtSpeed = findViewById(R.id.TextViewCarSpeed);
         seekBarSpeed = findViewById(R.id.seekbarSpeed);
+        imgInfo = findViewById(R.id.imageInfo);
     }
+
     private void ViewCamera() {
         cameraView.setWebViewClient(new WebViewClient() {
             @Override
@@ -202,15 +233,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                cameraView.setVisibility(View.VISIBLE);
+//                cameraView.setVisibility(View.VISIBLE);
             }
+
         });
-        
+
         cameraView.loadUrl("http://192.168.4.2");
         cameraView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 return (motionEvent.getAction() == MotionEvent.ACTION_MOVE);
+            }
+        });
+
+
+        imgInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cameraView.getVisibility() == View.INVISIBLE) {
+                    cameraView.setVisibility(View.VISIBLE);
+                } else {
+                    cameraView.setVisibility(View.INVISIBLE);
+                }
             }
         });
     }
