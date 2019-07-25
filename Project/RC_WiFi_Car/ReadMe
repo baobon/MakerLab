@@ -1,0 +1,72 @@
+/*
+*	Auth : Bao
+*	RC_WiFi_Car
+*	https://github.com/baobon/MakerShop
+*/
+
+-------------------------**************************------------------------
+				WIFI RC_CAR
+-------------------------**************************------------------------
+				DESCRIPTION
+
+--> Controller(left,right,forward,backward) RC Car With Mobile App
+--> Stream Camera
+
+-------------------------**************************------------------------
+				API KEY
+
+--> WiFi Server http://192.168.4.1/?MakerCar=
+--> Keyword 
+	+ Speed : from 0 to 100 (%) normal speed*2.53
+	+ Buzzer: sw(bz) : 0 -> OFF , 1 -> ON
+	+ Servo : from 40 to 110 (left -> right) // Maybe use
+	+ Controller : from 0 to 9
+	+ LedCam : sw(lc) : 0 -> OFF , 1 -> ON
+
+-------------------------**************************------------------------
+				CONTROLLER INFO
+--> Servo <--- 
+	+ 55 	--> Forward Left & Backward Left
+	+ 30	--> Left
+	+ 110 	--> Right
+	+ 95	--> Forawrd Right & Backward Right
+	+ 80 	--> Forward & BacWard
+
+--> Controller <--
+	+ 1	Forward 
+	+ 2	Backward
+	+ 3	Right
+	+ 4	Left
+	+ 5	Forward Left
+	+ 6 	Forward Right
+	+ 7 	Backward Left
+	+ 8	Backward Right
+	+ 9	Stop
+
+-------------------------**************************------------------------
+				TO DO LIST APPLICATION MOBILE
+
+ --> SSID  	= Maker_RC_Car
+ --> Password 	= makerbot123
+ 
+-- > Make JoyStick
+-- > Make Speed
+-- > Make Music App
+-- > Make Screen Stream Camera
+
+-------------------------**************************------------------------
+				TO DO LIST ARDUINO
+
+*** Arduino ***
+--> Uno_Send_Command
+--> ESP_Client_Server
+--> Camera_Read_Command_RunLed
+
+----->>>  Applicition ----->>> ESP_Module(Command) Send ----->>> Vietduino(Split to Controller) Send ----->>> ESPCamera(Run Led)
+
+--> Split string command from ESPClient to Vietduino 
+--> Split string command from Vietduino to ESPCamera 
+
+-------------------------**************************------------------------
+
+
