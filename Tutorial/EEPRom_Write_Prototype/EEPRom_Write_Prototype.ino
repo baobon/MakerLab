@@ -3,14 +3,18 @@
 */
 
 #include <EEPROM.h>
-String ssid = "DemoEEPROM";
-String pass = "PassEEPROM";
+String ssid = "Demo";
+String pass = "Pass";
 uint8_t addrid = 0;
 uint8_t addrpw = 30;
 uint8_t addfn = 60;
 void setup() {
   Serial.begin(115200);
+
   EEPROM.begin(512);
+  Serial.println("Start");
+  ReadEEPROM();
+  delay(2000);
   WriteEEPROM();
   delay(2000);
   ReadEEPROM();
