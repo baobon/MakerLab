@@ -1,12 +1,23 @@
+/*
+   Tool Board :  ESP32_Wrover_Module
+   Partition Scheme : Huge APP(3MB_NO_OTA)
+   
+   Creat WiFi AcessPoint
+    ID : Gen2
+    PW : makershopvn123
+
+*/
+
+
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 
-const char* ssid = "Maker_RC_Car";
-const char* pass = "makerbot123";
+const char* ssid = "Gen2_";
+const char* pass = "makershopvn123";
 ESP8266WebServer server(80);
 
-String command, lastcommand = "makershop";
+String command;
 
 void setup() {
   Serial.begin(115200);
@@ -26,7 +37,7 @@ void setup() {
 
 void loop() {
   server.handleClient();
-  command = server.arg("MakerCar");
+  command = server.arg("Gen2");
   //  if (command != "" && command != lastcommand)
   //  {
   //    Serial.println(command);
@@ -44,8 +55,8 @@ void loop() {
 
 void HTTP_handleRoot(void) {
 
-  if ( server.hasArg("MakerCar") ) {
-    Serial.println(server.arg("MakerCar"));
+  if ( server.hasArg("Gen2") ) {
+    Serial.println(server.arg("Gen2"));
   }
   server.send ( 200, "text/html", "" );
   delay(1);

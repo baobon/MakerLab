@@ -113,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     private void SpeedHanding() {
         seekBarSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -134,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     /*
     ----------------------------******************************--------------------------------------
     ----------------------------******************************--------------------------------------
