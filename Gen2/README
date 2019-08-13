@@ -1,0 +1,73 @@
+********************************GEN2*******************************
+
+API KEY
+	+Speed 		0 -> 100 (analog from 350(0%) -> 1023(100%))
+	+Direction	1 - > 5  
+				* 1 : Left
+				* 2 : Right
+				* 3 : Forward
+				* 4 : Backward
+				* 5 : Stop
+	+Servo_one 	0 -> 180;
+	+Servo_two	0 -> 180; 
+	+Led		0 -> 1	(send Serial to Camera)
+	
+
+
+*** For Arduino Library
+
+-- OK	Libray for Gen_EEPROM 
+		+ write(ssid,pass) --> String & String
+		+ readId	    --> from 0  -> 30 EEPROM
+		+ readPw	    -->	form 30 -> 60 EEPROM
+		+ waitRestore (user using when us forgot password Wifi ) - MakerShop_Gen2 - 123456789
+-- OK	Library for Gen_Voltage
+		+ readV --> float
+-- 	Library for Gen_SpilitStr
+		Warning : using with API: ,name=value, (ex) ,voltage=60, -> read voltage = 60 
+		+ read(name) --> String
+
+--	Library:Vietduino_DCMotor (edit pinOut using with Gen2 Board )
+--	Library:VietduinoTask
+--	Library:Vietduino_NewFuntion
+		+ Funtion Read IP From Camera
+		+ Funtion ReadVoltage
+		+ Funtion WaitRestore
+		+ Funtion ReadData From Android Controller
+		+ Funtion Controller
+		+ Funtion ChangeSSID&&PPASS ---> send to Camera <---> From Android Config
+		+ Funtion SendAPI-> Write(ON) Write(OFF) >- Camera -<
+
+
+*** For Android App Gen_Controller ***
+
+API Send : Makershop=,Speed=100,Direction=5,Servo_one=90,Servo_two=90,Led=0;
+
+--	4 Button Left Right Forward Backward 		( on Left Screen)
+--	4 Button Left Right Up Down Servo 		( on Right Screen)
+--	2 Button Setting && Light			(midle screen)
+--	1 Slider Speed					(top midle screen)
+
+When Click :
+	4 Button (on Left Screen)	--> Direction
+	4 Button (on Right Screen) 	--> Servo_one,Servo_two +-10;
+	2 Button (midle screen)		--> (info Controller) 	Led
+	1 Slider Speed			--> Speed
+
+** For Android App Gen_Config ***
+
+--	Txt Gen_Config
+--	txtSSID -> TextBox -> SSID
+--	txtPASS -> TextBox -> PASS
+-- 	Button	-> Check SSID && PASS != "" -> Send API
+--	Wait Gen2 Board Send -> "OK" --> Toast ---> Change Id & Pw Successfully
+
+
+API Send 	: MakerShop=,RunSet=99,SSID="DemoSSID",PASS="DEMOPASS",Confirm=99;
+API Normal 	: Makershop=,RunSet=00,SSID="DemoSSID",PASS="DEMOPASS",Confirm=00; 
+/* Gen 2 Board Wait RunSet == Confirm == 99 ---> Write SSID & PASS to EEPROM */
+
+
+
+
+
