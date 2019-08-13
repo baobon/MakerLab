@@ -63,8 +63,8 @@ When Click :
 --	Wait Gen2 Board Send -> "OK" --> Toast ---> Change Id & Pw Successfully
 
 
-API Send 	: MakerShop=,RunSet=99,SSID="DemoSSID",PASS="DEMOPASS",Confirm=99;
-API Normal 	: Makershop=,RunSet=00,SSID="DemoSSID",PASS="DEMOPASS",Confirm=00; 
+API Send 	:MakerShop=,RunSet=99,SSID=DemoSSID,PASS=DEMOPASS,Confirm=99,
+API Normal 	:Makershop=,RunSet=00,SSID="DemoSSID",PASS="DEMOPASS",Confirm=00, 
 /* Gen 2 Board Wait RunSet == Confirm == 99 ---> Write SSID & PASS to EEPROM */
 
 
