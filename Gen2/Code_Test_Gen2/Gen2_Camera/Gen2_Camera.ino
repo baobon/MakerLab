@@ -1,26 +1,29 @@
 /*
   Made by MakerShop.vn
-  
+
   Tool Board :  ESP32_Wrover_Module
   Partition Scheme : Huge APP(3MB_NO_OTA)
-  ***For User*** 
-Edit
-  ID : Gen2
-  PW : makershopvn123
-  
+  ***For User***
+  Edit
+  ID : MakerShop_Gen2
+  PW : 123456789
+
   ***For Dev***
-Edit
+  Edit
   Command read ex : ,LedCam=1,
   if(LedCam = 1){
-    led --> On 
+    led --> On
   }else if(LedCam !=1){
     led ---> Off
   }
-  
+  ***For SSID***
+   Command ex GenSen=,Config=99,g_ssid=hshop,pass=hshop,
+   if(
+
+
+
 */
-
-
-
+#include "Gen_SplitStr.h"
 #include "esp_camera.h"
 #include <WiFi.h>
 #include "esp_timer.h"
@@ -32,10 +35,14 @@ Edit
 #include "dl_lib.h"
 #include "esp_http_server.h"
 
-//Replace with your network credentials
-const char* ssid = "Gen2";
-const char* password = "makershopvn123";
+Gen_SplitStr handing;
 
+//const char* ssid = "Gen2";
+//const char* password = "makershopvn123";
+
+//char ssid = "Gen2";
+//String password = "makershopvn123";
+#define PINLED (4)
 #define PART_BOUNDARY "123456789000000000000987654321"
 
 // This project was tested with the AI Thinker Model, M5STACK PSRAM Model and M5STACK WITHOUT PSRAM
@@ -125,6 +132,8 @@ const char* password = "makershopvn123";
 #error "Camera model not selected"
 #endif
 
+String ssid;
+String pass;
 static const char* _STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" PART_BOUNDARY;
 static const char* _STREAM_BOUNDARY = "\r\n--" PART_BOUNDARY "\r\n";
 static const char* _STREAM_PART = "Content-Type: image/jpeg\r\nContent-Length: %u\r\n\r\n";
@@ -208,11 +217,11 @@ void startCameraServer() {
 }
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
 
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
   Serial.begin(115200);
   Serial.setDebugOutput(false);
-
+  pinMode(PINLED, OUTPUT);
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -252,29 +261,57 @@ void setup() {
     return;
   }
   // Wi-Fi connection
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
+  //  WiFi.begin(ssid, password);
+  //  String ssid = Eprom.readId();
+  //  String password = Eprom.readPw();
+  //  WiFi.begin(ssid, password);
+  // Send = ,Config=99,ssid=Makershop,pass=123456789,
+  while (true) {
+    Serial.println("WaitingRead");
+    digitalWrite(PINLED, !digitalRead(PINLED));
+    delay(100);
+    if (Serial.available()) {
+      String g_data = Serial.readStringUntil('\n');
+      Serial.println(g_data);
+      int b_config = handing.splitStr(g_data, "Config").toInt();
+      String b_ssid = handing.splitStr(g_data, "ssid");
+      String b_pass = handing.splitStr(g_data, "pass");
+      if (b_config == 99) {
+        if (b_ssid.length() > 0 && b_pass.length() > 0) {
+          ssid = b_ssid;
+          pass = b_pass;
+          Serial.println("ssid :" + ssid);
+          Serial.println("pass :" + pass);
+          Serial.println("OK");
+          break;
+        }
+      }
+    }
   }
-  Serial.println("");
-  Serial.println("WiFi connected");
+  WiFi.begin(ssid.c_str(), pass.c_str());
+  while (WiFi.status() != WL_CONNECTED) {
+    digitalWrite(PINLED, !digitalRead(PINLED));
+    Serial.print(".");
+    delay(200);
+  }
+
   while (!Serial) {
 
   }
-  Serial.print("Camera Stream Ready! Go to: http://");
+  //  Serial.print("Camera Stream Ready! Go to: http://");
+  Serial.print(",IPCAMERA=");
   Serial.print(WiFi.localIP());
+  Serial.print(",");
+  Serial.println();
   // Start streaming web server
   startCameraServer();
-
-  pinMode(4, OUTPUT);
   digitalWrite(4, HIGH);
   delay(500);
   digitalWrite(4, LOW);
 }
 
 void loop() {
-   if (Serial.available()) {
+  if (Serial.available()) {
     String command = Serial.readStringUntil('\n');
     if (command != "") {
       handlingdata(command);
@@ -282,79 +319,15 @@ void loop() {
   }
 }
 
-String splitString(String v_G_motherString, String v_G_Command, String v_G_Start_symbol, String v_G_Stop_symbol, unsigned char v_G_Offset)
-{
-  unsigned char tem_Offset = v_G_Offset - 1;
-  unsigned char lenOfCommand = v_G_Command.length();
-
-  int posOfCommand = v_G_motherString.indexOf(v_G_Command);
-  int PosOfStartSymbol = v_G_motherString.indexOf(v_G_Start_symbol, posOfCommand + lenOfCommand);
-  if (posOfCommand < 0)
-    return "";
-
-  // Xu ly Dau Command
-  //  DB_SPLIT(v_G_Command + " posOfCommand " + (String)posOfCommand);
-  if (posOfCommand > 0)
-  {
-    String tem__ = v_G_motherString.substring(posOfCommand - 1, posOfCommand);
-    //    DB_SPLIT("posOfCommand at Start " + tem__);
-    if ((tem__ != " ") && (tem__ != v_G_Stop_symbol))
-    {
-      return "";
-    }
-  }
-
-  // Xu ly cuoi Command
-  unsigned int temPosOfLastCommand = posOfCommand + lenOfCommand;
-  if (temPosOfLastCommand)
-  {
-    String tem__ = v_G_motherString.substring(temPosOfLastCommand, temPosOfLastCommand + 1);
-    //    DB_SPLIT("posOfCommand at Last " + tem__);
-    if ((tem__ != " ") && (tem__ != v_G_Start_symbol))
-    {
-      return "";
-    }
-  }
-
-  if (v_G_Offset == 0)
-  {
-    String tem__ = v_G_motherString.substring(posOfCommand, PosOfStartSymbol);
-    if (tem__ == v_G_Command)
-    {
-      return tem__;
-    }
-    return "";
-  }
-
-  while (tem_Offset > 0)
-  {
-    tem_Offset--;
-    PosOfStartSymbol = v_G_motherString.indexOf(v_G_Start_symbol, PosOfStartSymbol + 1);
-  }
-
-  if (v_G_Stop_symbol != "")
-  {
-    int PosOfStopSymbol = v_G_motherString.indexOf(v_G_Stop_symbol, PosOfStartSymbol + 1);
-    if (PosOfStopSymbol == -1)
-    {
-      return "";
-    }
-    else
-      ;
-    return v_G_motherString.substring(PosOfStartSymbol + 1, PosOfStopSymbol);
-  }
-  else
-  {
-    return v_G_motherString.substring(PosOfStartSymbol + 1);
-  }
-}
 
 void handlingdata(String datas)
 {
-  String led = splitString(datas, "LedCam", "=", ",", 1);
-  if (led == "1") {
+  String b_led = handing.splitStr(datas, "LedCam");
+  if (b_led == "1") {
     digitalWrite(4, HIGH);
-  } else if (led == "0") {
+  } else if (b_led == "0") {
     digitalWrite(4, LOW);
   }
+
+
 }

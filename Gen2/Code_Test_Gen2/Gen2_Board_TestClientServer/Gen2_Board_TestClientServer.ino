@@ -13,8 +13,8 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 
-const char* ssid = "Gen2_";
-const char* pass = "makershopvn123";
+const char* ssid = "MakerShop_Gen2";
+const char* pass = "123456789";
 ESP8266WebServer server(80);
 
 String command;
@@ -37,7 +37,7 @@ void setup() {
 
 void loop() {
   server.handleClient();
-  command = server.arg("Gen2");
+  command = server.arg("Makershop");
   //  if (command != "" && command != lastcommand)
   //  {
   //    Serial.println(command);
@@ -52,11 +52,11 @@ void loop() {
   }
 
 }
-
+//
 void HTTP_handleRoot(void) {
 
-  if ( server.hasArg("Gen2") ) {
-    Serial.println(server.arg("Gen2"));
+  if ( server.hasArg("Makershop") ) {
+    Serial.println(server.arg("Makershop"));
   }
   server.send ( 200, "text/html", "" );
   delay(1);
