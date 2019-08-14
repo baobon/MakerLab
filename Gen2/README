@@ -14,7 +14,13 @@ API KEY
 	
 
 
-*** For Arduino Library
+*** For ESP Camera ***
+
+-- OK	 Auto connect Wifi Id && Pw from Gen2_Send (send data -> gen , wait gen -> ssid & pass ---> Wifi.begin)
+-- OK	 Read Serial from Wifi --> Run on off Led 
+-- OK	 Stream Camera	 
+
+*** For Arduino Library ****
 
 -- OK	Libray for Gen_EEPROM 
 		+ write(ssid,pass) --> String & String
@@ -23,25 +29,26 @@ API KEY
 		+ waitRestore (user using when us forgot password Wifi ) - MakerShop_Gen2 - 123456789
 -- OK	Library for Gen_Voltage
 		+ readV --> float
--- 	Library for Gen_SpilitStr
+-- OK	Library for Gen_SpilitStr
 		Warning : using with API: ,name=value, (ex) ,voltage=60, -> read voltage = 60 
 		+ read(name) --> String
 
 --	Library:Vietduino_DCMotor (edit pinOut using with Gen2 Board )
 --	Library:VietduinoTask
 --	Library:Vietduino_NewFuntion
-		+ Funtion Read IP From Camera
-		+ Funtion ReadVoltage
-		+ Funtion WaitRestore
-		+ Funtion ReadData From Android Controller
-		+ Funtion Controller
-		+ Funtion ChangeSSID&&PPASS ---> send to Camera <---> From Android Config
-		+ Funtion SendAPI-> Write(ON) Write(OFF) >- Camera -<
+-- OK		+ Funtion Read IP From Camera
+-- OK		+ Funtion ReadVoltage
+-- OK		+ Funtion WaitRestore
+-- OK		+ Funtion ReadData From Android Controller
+		+ Funtion Controller(edit because Vietduino_DC Motor write for Arduino ---- edit use with ESP)
+-- OK		+ Funtion ChangeSSID&&PPASS ---> send to Camera <---> From Android Config--
+-- OK		+ Funtion SendAPI-> Write(ON) Write(OFF) >- Camera -<
 
 
 *** For Android App Gen_Controller ***
-
+		
 API Send : Makershop=,Speed=100,Direction=5,Servo_one=90,Servo_two=90,Led=0;
+http://192.168.4.1/?Makershop=,Speed=100,Direction=5,Servo_one=90,Servo_two=1,Led=1,
 
 --	4 Button Left Right Forward Backward 		( on Left Screen)
 --	4 Button Left Right Up Down Servo 		( on Right Screen)

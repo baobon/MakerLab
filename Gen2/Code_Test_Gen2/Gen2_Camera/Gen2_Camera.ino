@@ -1,3 +1,4 @@
+
 /*
   Made by MakerShop.vn
 
@@ -10,10 +11,10 @@
 
   ***For Dev***
   Edit
-  Command read ex : ,LedCam=1,
-  if(LedCam = 1){
+  Command read ex : ,Led=1,
+  if(Led = 1){
     led --> On
-  }else if(LedCam !=1){
+  }else if(Led !=1){
     led ---> Off
   }
   ***For SSID***
@@ -322,7 +323,7 @@ void loop() {
 
 void handlingdata(String datas)
 {
-  String b_led = handing.splitStr(datas, "LedCam");
+  String b_led = handing.splitStr(datas, "Led");
   if (b_led == "1") {
     digitalWrite(4, HIGH);
   } else if (b_led == "0") {
