@@ -26,6 +26,9 @@ uint8_t  g_Runset  = 0;
 uint8_t  g_Confirm = 0;
 String   g_SSID    = "";
 String   g_PASS    = "";
+//Value of Controller
+uint8_t  g_Controller = 0;
+
 
 void setup() {
   Serial.begin(115200);
@@ -34,6 +37,17 @@ void setup() {
 void loop() {
   VIETDUINO_UPDATE;
 }
+
+// **-----> This Funtion to Debug App ! <------** //
+CREATE_FUNCTION(Debug_Gen) {
+  while (!false) {
+    //    Serial.println(g_Controller);
+    M_DELAY(0);
+  }
+  M_DELAY(0);
+  END_CREATE_FUNCTION
+}
+
 
 // **-----> This Funtion to CreatWifi && Read Data Send from App Phone ! <------**
 CREATE_FUNCTION(WiFi_ReadCommand) {
@@ -69,6 +83,27 @@ CREATE_FUNCTION(WiFi_ReadCommand) {
       g_Confirm = (handing.splitStr(command, CONFIRM)).toInt();
       g_SSID = handing.splitStr(command, ID);
       g_PASS = handing.splitStr(command, PW);
+      /*
+         Controller in here
+      */
+
+      Serial.print("Servo_one.write(" + String(g_Servo_one) + ")");
+      Serial.print("          ");
+      //Servo_two
+      Serial.print("Servo_two.write(" + String(g_Servo_two) + ")");
+      Serial.print("          ");
+      //Speed
+      Serial.print("Speed = " + String(g_Speed));
+      Serial.print("          ");
+
+      g_Direction == 1 ? Serial.println("1->Left")    : g_Direction == 2 ? Serial.println("2->Right") :
+      g_Direction == 3 ? Serial.println("3->Forward") : g_Direction == 4 ? Serial.println("4->Backward") :
+      Serial.println("5->Stop");
+      M_DELAY(0);
+
+      /*
+         End Controller
+      */
       command = "";
     }
     M_DELAY(0);
@@ -112,16 +147,24 @@ CREATE_FUNCTION(Controler_Config) {
 CREATE_FUNCTION(EPROM_WaitSendData) {
   while (!false) {
     if (Serial.available()) {
-       String command = Serial.readStringUntil('\n');
-       Serial.println(command);
-       if(command.indexOf("WaitingRead")>-1){
+      String command = Serial.readStringUntil('\n');
+      //      Serial.println(command);
+      if (command.indexOf("WaitingRead") > -1) {
         String s_id = Eprom.readId();
         String s_pw = Eprom.readPw();
-        Serial.println(",Config=99,ssid="+s_id+",pass="+s_pw+",");
-       }
+        Serial.println(",Config=99,ssid=" + s_id + ",pass=" + s_pw + ",");
+      }
+      M_DELAY(0);
     }
     M_DELAY(0);
+    END_CREATE_FUNCTION
   }
+}
+
+
+// **-----> This Funtion to Controller Gen when App Phone send Data ! <------** //
+CREATE_FUNCTION(DC_Motor_Controller) {
+
   M_DELAY(0);
   END_CREATE_FUNCTION
 }

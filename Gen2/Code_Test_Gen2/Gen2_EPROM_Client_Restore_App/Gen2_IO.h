@@ -39,3 +39,6 @@ extern uint8_t  g_Runset;
 extern uint8_t  g_Confirm;
 extern String   g_SSID;
 extern String   g_PASS;
+
+//Value of controller
+extern uint8_t  g_Controller;
