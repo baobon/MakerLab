@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">Maker Edu Wifi Config</string>
+    <string name="app_name">Motor Controller Config</string>
+    <string name="idpass">Id: Enter the new Wi-Fi SSID, at least 4 characters!\nPw: Enter the new PASSWORD Wi-Fi, at least 8 characters\nClick Write to change !!!
+        \n\nIf the change is successful, the LED will blink off 0.5 seconds 4 times
+
+</string>
+    <string name="thisapp">This application is used to change WiFi ssid and WiFi password
+</string>
+    <string name="maker">*** Copyright by Makershop.vn ***</string>
 </resources>
