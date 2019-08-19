@@ -75,11 +75,13 @@ public class G_Main extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    btn_Forward.setImageResource(R.drawable.top_on);
 //                    Toast.makeText(G_Main.this, "Action Down", Toast.LENGTH_SHORT).show();
                     commondata.setDirection("3");
                     send_Data();
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
 //                    Toast.makeText(G_Main.this, "Action Up", Toast.LENGTH_SHORT).show();
+                    btn_Forward.setImageResource(R.drawable.top);
                     commondata.setDirection("5");
                     send_Data();
                 }
@@ -91,10 +93,12 @@ public class G_Main extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    btn_Left.setImageResource(R.drawable.left_on);
 //                    Toast.makeText(G_Main.this, "Action Down", Toast.LENGTH_SHORT).show();
                     commondata.setDirection("1");
                     send_Data();
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    btn_Left.setImageResource(R.drawable.left);
 //                    Toast.makeText(G_Main.this, "Action Up", Toast.LENGTH_SHORT).show();
                     commondata.setDirection("5");
                     send_Data();
@@ -107,11 +111,12 @@ public class G_Main extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    btn_Right.setImageResource(R.drawable.right_on);
 //                    Toast.makeText(G_Main.this, "Action Down", Toast.LENGTH_SHORT).show();
                     commondata.setDirection("2");
                     send_Data();
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-//                    Toast.makeText(G_Main.this, "Action Up", Toast.LENGTH_SHORT).show();
+                    btn_Right.setImageResource(R.drawable.right);
                     commondata.setDirection("5");
                     send_Data();
                 }
@@ -124,17 +129,18 @@ public class G_Main extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    btn_Backward.setImageResource(R.drawable.bottom_on);
 //                    Toast.makeText(G_Main.this, "Action Down", Toast.LENGTH_SHORT).show();
                     commondata.setDirection("4");
                     send_Data();
-                    return true;
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
 //                    Toast.makeText(G_Main.this, "Action Up", Toast.LENGTH_SHORT).show();
+                    btn_Backward.setImageResource(R.drawable.bottom);
                     commondata.setDirection("5");
                     send_Data();
-                    return true;
+
                 }
-                return false;
+                return true;
             }
         });
 
@@ -142,10 +148,13 @@ public class G_Main extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    if(commondata.getServo_one() >= 5 && commondata.getServo_one() <=180){
-                        commondata.setServo_one(commondata.getServo_one()-5);
+                    btn_servoLeft.setImageResource(R.drawable.btnleft_on);
+                    if (commondata.getServo_one() >= 5 && commondata.getServo_one() <= 180) {
+                        commondata.setServo_one(commondata.getServo_one() - 5);
                         send_Data();
                     }
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    btn_servoLeft.setImageResource(R.drawable.btnleft);
                 }
                 return true;
             }
@@ -155,10 +164,13 @@ public class G_Main extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    if(commondata.getServo_one() >= 0 && commondata.getServo_one() <=175){
-                        commondata.setServo_one(commondata.getServo_one()+5);
+                    btn_servoRight.setImageResource(R.drawable.btnright_on);
+                    if (commondata.getServo_one() >= 0 && commondata.getServo_one() <= 175) {
+                        commondata.setServo_one(commondata.getServo_one() + 5);
                         send_Data();
                     }
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    btn_servoRight.setImageResource(R.drawable.btnright);
                 }
                 return true;
             }
@@ -168,10 +180,13 @@ public class G_Main extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    if(commondata.getGetServo_two() >= 0 && commondata.getGetServo_two() <=175){
-                        commondata.setGetServo_two(commondata.getGetServo_two()+5);
+                    btn_servoUp.setImageResource(R.drawable.btntop_on);
+                    if (commondata.getGetServo_two() >= 0 && commondata.getGetServo_two() <= 175) {
+                        commondata.setGetServo_two(commondata.getGetServo_two() + 5);
                         send_Data();
                     }
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    btn_servoUp.setImageResource(R.drawable.btntop);
                 }
                 return true;
             }
@@ -180,17 +195,18 @@ public class G_Main extends AppCompatActivity {
         btn_servoDown.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                btn_servoDown.setImageResource(R.drawable.btnbottom_on);
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    if(commondata.getGetServo_two() >= 5 && commondata.getGetServo_two() <=180){
-                        commondata.setGetServo_two(commondata.getGetServo_two()-5);
+                    if (commondata.getGetServo_two() >= 5 && commondata.getGetServo_two() <= 180) {
+                        commondata.setGetServo_two(commondata.getGetServo_two() - 5);
                         send_Data();
                     }
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    btn_servoDown.setImageResource(R.drawable.btnbottom);
                 }
                 return true;
             }
         });
-
-
 
 
     }
