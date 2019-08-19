@@ -1,5 +1,20 @@
 ********************************GEN2*******************************
 
+
+
+*************************************Note*************************************
+
+-	Android			->	While(press) in Button
+-	Gen_board		->	Check Camera IP && Send && Read Data from Gen
+
+************************************Time-Date************************************
+
+-	18/08
+	+ Controller App Desgin , Light Common !
+	+ Add Vietduino_DC Motor to Gen_board
+	
+
+
 API KEY
 	+Speed 		0 -> 100 (analog from 350(0%) -> 1023(100%))
 	+Direction	1 - > 5  

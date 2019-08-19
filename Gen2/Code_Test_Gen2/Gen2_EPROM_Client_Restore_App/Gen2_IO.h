@@ -6,6 +6,8 @@
 #include "Gen_EPROM.h"
 #include "Gen_Voltage.h"
 #include "Gen_SplitStr.h"
+#include "Vietduino_DCmotor.h"
+#include "Vietduino_Servo.h"
 
 #define SPEED       "Speed"
 #define DIREC       "Direction"
@@ -18,10 +20,27 @@
 #define ID          "SSID"
 #define PW          "PASS"
 
+//Motor 
+#define TIME_RUN     (2000)
+#define BACK_WARD       (1)
+#define FOR_WARD        (0)
+#define LEFT_MOTOR      (3)
+#define RIGHT_MOTOR     (4)
+
+//Servo
+#define SERVO_ONE_PIN   12    // D6
+#define SERVO_TWO_PIN   13    // D7
+
 //Constructor
+extern Vietduino_DCmotor motorLeft;
+extern Vietduino_DCmotor motorRight;
 extern Gen_EPROM Eprom;
 extern Gen_SplitStr handing;
 extern Gen_Voltage vol;
+extern Vietduino_Servo servo_one;
+extern Vietduino_Servo servo_two;
+
+
 extern ESP8266WebServer server;
 
 extern String command;

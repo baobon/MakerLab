@@ -12,8 +12,8 @@ void loop() {
   if (Serial.available()) {
     String command = Serial.readStringUntil('\n');
     Serial.println(command);
-//    motorRight.write(1, command.toInt(), 5000);
-    motorLeft.forward(command.toInt());
+    motorRight.write(1, command.toInt(), 1000);
+//    motorRight.forward(command.toInt());
   }
 
 

@@ -93,41 +93,39 @@
         app:layout_constraintGuide_percent="0.85" />
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="0dp"
+        android:id="@+id/imageRight"
+        android:layout_width="95dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:src="@drawable/btnright"
         app:layout_constraintBottom_toTopOf="@+id/guideline8"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="@+id/guideline7"
-        app:layout_constraintVertical_bias="0.48" />
+        app:layout_constraintTop_toTopOf="@+id/guideline7" />
 
     <ImageView
-        android:id="@+id/imageView96"
+        android:id="@+id/imgDirec_Up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:src="@drawable/top"
         app:layout_constraintBottom_toTopOf="@+id/imageView11"
         app:layout_constraintEnd_toStartOf="@+id/guideline10"
-        app:layout_constraintHorizontal_bias="0.727"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline9" />
 
 
     <ImageView
-        android:id="@+id/imageView97"
+        android:id="@+id/imgDirec_Down"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:src="@drawable/bottom"
         app:layout_constraintEnd_toStartOf="@+id/guideline10"
-        app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="@+id/guideline9"
         app:layout_constraintTop_toBottomOf="@+id/imageView11" />
 
     <ImageView
-        android:id="@+id/imageView98"
+        android:id="@+id/imgDirec_Right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -137,7 +135,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline7" />
 
     <ImageView
-        android:id="@+id/imageView99"
+        android:id="@+id/imgDirec_Left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -148,7 +146,7 @@
 
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/imageLeft"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -158,30 +156,29 @@
         app:layout_constraintTop_toTopOf="@+id/guideline7" />
 
     <ImageView
-        android:id="@+id/imageView8"
-        android:layout_width="0dp"
+        android:id="@+id/imageTop"
+        android:layout_width="68dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
         android:src="@drawable/btntop"
         app:layout_constraintBottom_toTopOf="@+id/guideline7"
         app:layout_constraintEnd_toStartOf="@+id/guideline12"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline11" />
 
     <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="0dp"
+        android:id="@+id/imageBottom"
+        android:layout_width="68dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:src="@drawable/btnbottom"
         app:layout_constraintEnd_toStartOf="@+id/guideline12"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline11"
         app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <ImageView
         android:id="@+id/imageView11"
-        android:layout_width="0dp"
+        android:layout_width="68dp"
         android:layout_height="wrap_content"
         android:src="@drawable/button"
         app:layout_constraintBottom_toTopOf="@+id/guideline8"
@@ -197,10 +194,10 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/calligraffitti"
-        android:textStyle="bold"
         android:text="@string/desgin"
         android:textColor="@android:color/white"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintStart_toStartOf="@+id/guideline10" />
@@ -219,14 +216,13 @@
 
     <SeekBar
         android:id="@+id/seekBar"
-        android:layout_width="0dp"
+        android:layout_width="164dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline8"
         app:layout_constraintEnd_toStartOf="@+id/guideline14"
-        app:layout_constraintStart_toStartOf="@+id/guideline13"
-        app:layout_constraintTop_toTopOf="@+id/guideline7" />
+        app:layout_constraintStart_toStartOf="@+id/guideline13" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline13"
@@ -248,27 +244,35 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="8dp"
         android:fontFamily="@font/calligraffitti"
         android:text="Speed 0%"
         android:textColor="@android:color/white"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/seekBar"
+        app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintEnd_toStartOf="@+id/guideline14"
-        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="@+id/guideline13" />
 
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/camera" />
+
+    <WebView
+        android:id="@+id/webView_send"
+        android:layout_width="59dp"
+        android:layout_height="158dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="22dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/imgDirec_Left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!--<ImageView-->
     <!--android:id="@+id/imageView6"-->
