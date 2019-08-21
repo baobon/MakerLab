@@ -9,6 +9,26 @@
 #include "Vietduino_DCmotor.h"
 #include "Vietduino_Servo.h"
 
+/*
+   Debug
+*/
+
+/* Uncomment to enable printing out nice debug messages. */
+#define RESTORE_GEN
+
+#define DEBUG_PRINTER Serial /**< Define where debug output will be printed. */
+/* Setup debug printing macros. */
+#ifdef RESTORE_GEN
+#define GEN_PRINT(...) { DEBUG_PRINTER.print(__VA_ARGS__); }
+#define GEN_PRINTLN(...) { DEBUG_PRINTER.println(__VA_ARGS__); }
+#else
+#define GEN_PRINT(...) {} /**< Debug Print Placeholder if Debug is disabled */
+#define GEN_PRINTLN(...) {} /**< Debug Print Line Placeholder if Debug is disabled */
+#endif
+
+
+
+
 #define SPEED       "Speed"
 #define DIREC       "Direction"
 #define SERVO_ONE   "Servo_one"

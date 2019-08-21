@@ -46,6 +46,8 @@ String s_pw;
 
 void setup() {
   Serial.begin(115200);
+  motorLeft.stop();
+  motorRight.stop();
 }
 
 void loop() {
@@ -70,26 +72,22 @@ CREATE_FUNCTION(WiFi_ReadCommand) {
   s_id = Eprom.readId();
   s_pw = Eprom.readPw();
   WiFi.softAP(s_id, s_pw);
-  Serial.println();
-  Serial.print("ssid : "); Serial.println(s_id);
-  Serial.print("pass : "); Serial.println(s_pw);
+  GEN_PRINTLN();
+  GEN_PRINT("ssid : "); GEN_PRINTLN(s_id);
+  GEN_PRINT("pass : "); GEN_PRINTLN(s_pw);
   IPAddress myIP = WiFi.softAPIP();
-  Serial.print("AP IP address: ");
-  Serial.println(myIP);
+  GEN_PRINT("AP IP address: ");
+  GEN_PRINTLN(myIP);
   // Starting WEB-server
   server.on ( "/", HTTP_handleRoot );
   server.onNotFound ( HTTP_handleRoot );
   server.begin();
-  Serial.println("Begin Send Data");
-
+  GEN_PRINTLN("Begin Send Data");
   while (!false) {
     server.handleClient();
     command = server.arg("Makershop");
-    //    if (command != "" && command != lastcommand)
     if (command != "")
     {
-      //      lastcommand = command;
-      //      Serial.println(command);
       // ----> Get data controller to handing from Controller <-------
       g_Speed = (handing.splitStr(command, SPEED)).toInt();
       g_Direction = (handing.splitStr(command, DIREC)).toInt();
@@ -106,25 +104,32 @@ CREATE_FUNCTION(WiFi_ReadCommand) {
          Controller in here
       */
       //
-      Serial.print("Servo_one.write(" + String(g_Servo_one) + ")");
-      Serial.print("   ");
+      GEN_PRINT("Servo_one.write(" + String(g_Servo_one) + ")");
+      //      Serial.print("Servo_one.write(" + String(g_Servo_one) + ")");
+      GEN_PRINT("    ");
+      //      Serial.print("   ");
       //Servo_two
-      Serial.print("Servo_two.write(" + String(g_Servo_two) + ")");
-      Serial.print("   ");
+      GEN_PRINT("Servo_two.write(" + String(g_Servo_two) + ")");
+      GEN_PRINT("   ");
       //Speed
-      Serial.print("Speed = " + String(g_Speed));
-      Serial.print("   ");
+      GEN_PRINT("Speed = " + String(g_Speed));
+      GEN_PRINT("   ");
+      //
+      //      g_Direction == 1 ? GEN_PRINT("1->Left")    :
+      //          g_Direction == 2 ? GEN_PRINT("2->Right") :
+      //              g_Direction == 3 ? GEN_PRINT("3->Forward") :
+      //                  g_Direction == 4 ? GEN_PRINT("4->Backward") :
+      //                      GEN_PRINT("5->Stop");
 
-      g_Direction == 1 ? Serial.println("1->Left")    : g_Direction == 2 ? Serial.println("2->Right") :
-      g_Direction == 3 ? Serial.println("3->Forward") : g_Direction == 4 ? Serial.println("4->Backward") :
-      Serial.println("5->Stop");
 
+      //      runDCMotor(g_Direction, g_Speed);
 
       M_DELAY(0);
 
       /*
          End Controller
       */
+
       command = "";
     }
     M_DELAY(0);
@@ -145,6 +150,7 @@ CREATE_FUNCTION(Controler_Config) {
   //Config
   if (g_Runset == 99 && g_Confirm == 99) {
     Eprom.write(g_SSID, g_PASS);
+    pinMode(PINLED, OUTPUT);
     digitalWrite(PINLED, LOW); M_DELAY(500);
     digitalWrite(PINLED, !digitalRead(PINLED)); M_DELAY(500);
     digitalWrite(PINLED, !digitalRead(PINLED)); M_DELAY(500);
@@ -155,7 +161,7 @@ CREATE_FUNCTION(Controler_Config) {
     M_DELAY(5000);
     ESP.restart();
     g_Runset = g_Confirm = 0;
-    Serial.println("Write EEPROM");
+    GEN_PRINTLN("Write EEPROM");
   }
 
   M_DELAY(0);
@@ -200,39 +206,45 @@ CREATE_FUNCTION(EPROM_WaitSendData) {
 }
 
 
-// **-----> This Funtion to Controller Gen when App Phone send Data ! <------** //
-CREATE_FUNCTION(DC_Motor_Controller) {
-  //  motorLeft.stop();
-  //  motorRight.stop();
-  while (!false) {
-    switch (g_Direction) {0
-      case 1:
-        motorRight.write(1, g_Speed, 1000);
-        //        Serial.println("Left");
-        break;
-      case 2:
-        motorLeft.write(1, g_Speed, 1000);
-        //        Serial.println("Right");
-        break;
-      case 3:
-        motorRight.write(1, g_Speed, 1000);
-        motorLeft.write(1, g_Speed, 1000);
-        //        Serial.println("Forward");
-        break;
-      case 4:
-        motorRight.write(0, g_Speed, 1000);
-        motorLeft.write(0, g_Speed, 1000);
-        //        Serial.println("Backward");
-        break;
-      default:
-        //        Serial.println("Stop");
-        break;
-    }
-    M_DELAY(0);
-  }
-  M_DELAY(0);
-  END_CREATE_FUNCTION
-}
+//// **-----> This Funtion to Controller Gen when App Phone send Data ! <------** //
+//CREATE_FUNCTION(DC_Motor_Controller) {
+//  //  motorLeft.stop();
+//  //  motorRight.stop();
+//  while (!false) {
+//    GEN_PRINTLN("g_Direction = " +String(g_Direction));
+//    switch (g_Direction) {
+//      case 1:
+//        motorRight.write(1, g_Speed, 1000);
+//        //        Serial.println("Left");
+//        break;
+//      case 2:
+//        motorLeft.write(1, g_Speed, 1000);
+//        //        Serial.println("Right");
+//        break;
+//      case 3:
+//        motorRight.write(1, g_Speed, 1000);
+//        motorLeft.write(1, g_Speed, 1000);
+//        //        Serial.println("Forward");
+//        break;
+//      case 4:
+//        motorRight.write(0, g_Speed, 1000);
+//        motorLeft.write(0, g_Speed, 1000);
+//        //        Serial.println("Backward");
+//        break;
+//      default:
+//       GEN_PRINTLN("STOP STOP STOP");
+//        motorLeft.stop();
+//        motorRight.stop();
+//        break;
+//    }
+//    M_DELAY(0);
+//  }
+//  M_DELAY(0);
+//  END_CREATE_FUNCTION
+//}
+
+
+
 
 // **-----> This Funtion to Run Servo ! <------** //
 CREATE_FUNCTION(Run_Servo) {
@@ -253,7 +265,7 @@ CREATE_FUNCTION(Run_Servo) {
 // **-----> This Funtion to Wait Data Send from App Phone ! <------** //
 CREATE_FUNCTION(EPROM_WaitRestore) {
   while (!false) {
-    Eprom.waitRestore();
+    //    Eprom.waitRestore();
     M_DELAY(0);
   }
   M_DELAY(0);
@@ -271,4 +283,33 @@ CREATE_FUNCTION(Gen_ReadVoltage) {
   }
   M_DELAY(0);
   END_CREATE_FUNCTION
+}
+
+
+void runDCMotor(int direc, int speeds) {
+  switch (direc) {
+    case 1:
+      motorRight.write(1, speeds, 1000);
+      GEN_PRINTLN("Left");
+      break;
+    case 2:
+      motorLeft.write(1, speeds, 1000);
+      GEN_PRINTLN("Right");
+      break;
+    case 3:
+      motorRight.write(1, speeds, 1000);
+      motorLeft.write(1, speeds, 1000);
+      GEN_PRINTLN("Forward");
+      break;
+    case 4:
+      motorRight.write(0, speeds, 1000);
+      motorLeft.write(0, speeds, 1000);
+      GEN_PRINTLN("Backward");
+      break;
+    default:
+      GEN_PRINTLN("Stop");
+      motorLeft.stop();
+      motorRight.stop();
+      break;
+  }
 }

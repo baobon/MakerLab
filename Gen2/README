@@ -2,16 +2,41 @@
 
 
 
-*************************************Note*************************************
+********************************Note*******************************
 
--	Android			->	While(press) in Button
--	Gen_board		->	Check Camera IP && Send && Read Data from Gen
-
-************************************Time-Date************************************
+-	Android			->	While(press) in Button (fix 19/04)
+				->	Read voltage from web API ****
+				->	Service audio
+				->	Stream camera
+	
+-	Gen_board		->	Check Camera IP && Send && Read Data from Gen (Some thing wrong 19/04 - no fix)
+				->	UPDATE GEN_DEBUG
+				->	Creat flowchart
+*****************************Time-Date*******************************
 
 -	18/08
-	+ Controller App Desgin , Light Common !
-	+ Add Vietduino_DC Motor to Gen_board
+	+ Controller App Desgin , Light Common !		OK
+	+ Add Vietduino_DC Motor to Gen_board			OK
+
+-	19/08
+	+ App Android 
+		-> Change background , update screen 		OK
+		-> Edit library DC motor			OK
+-	20/08
+	+ App Android screen audio , camera			OK
+	
+-	21/08
+	- Gen	
+		+ Update new version Code --> Gen_Main 			OK
+		+ Send data Gen(Config) -> Camera 
+			- IP
+			- Status of Led
+		+
+ 
+	- Android
+		+ Stream Camera IP
+		+ Audio Service
+		+ Led Controller 	
 	
 
 
@@ -32,7 +57,9 @@ API KEY
 *** For ESP Camera ***
 
 -- OK	 Auto connect Wifi Id && Pw from Gen2_Send (send data -> gen , wait gen -> ssid & pass ---> Wifi.begin)
+	 Example API : ,Config=99,ssid=MakerShop_Gen2,pass=123456789, 
 -- OK	 Read Serial from Wifi --> Run on off Led 
+	 Example API : ,Led=1, -> Turn on Led ---> 0 ---> Turn off Led
 -- OK	 Stream Camera	 
 
 *** For Arduino Library ****
@@ -69,12 +96,19 @@ http://192.168.4.1/?Makershop=,Speed=100,Direction=5,Servo_one=90,Servo_two=1,Le
 --	4 Button Left Right Up Down Servo 		( on Right Screen)
 --	2 Button Setting && Light			(midle screen)
 --	1 Slider Speed					(top midle screen)
+--	1 Camera Button					(left top)
+--	1 Audio Car Button				(marginLeft CameraButton)
+--	1 TxtBaterry					(right top)
+--	1 Image Battery status				(toRightof TxtBaterry)
 
 When Click :
 	4 Button (on Left Screen)	--> Direction
 	4 Button (on Right Screen) 	--> Servo_one,Servo_two +-10;
 	2 Button (midle screen)		--> (info Controller) 	Led
 	1 Slider Speed			--> Speed
+	1 Camera Button			--> Stream camera
+	1 Txt Baterry			--> Show battery 0 -> 100 (full 8.4);
+	1 Img Battery			--> Show battery status (low,midle,full);
 
 ** For Android App Gen_Config ***
 
