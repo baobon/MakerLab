@@ -26,14 +26,15 @@
 	+ App Android screen audio , camera			OK
 	
 -	21/08
-	- Gen	
+	- Gen	Update Read Voltage && IP Camera -> Send WebAPI
 		+ Update new version Code --> Gen_Main 			OK
-		+ Send data Gen(Config) -> Camera 
-			- IP
-			- Status of Led
+		+ Send data Gen(Config) -> Camera 			OK
+			- IP						OK
+			- Status of Led					OK
 		+
- 
+ 	
 	- Android
+		+ Read Voltage && IP Camera from WebAPI : 192.168.4.1
 		+ Stream Camera IP
 		+ Audio Service
 		+ Led Controller 	

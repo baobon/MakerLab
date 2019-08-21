@@ -18,9 +18,15 @@
 #include "Gen_SplitStr.h"
 
 /*
+    Serial
+ */
+#define mySerial Serial
+
+/*
     Task Running hidden
     +    Voltage_Task   -> Send voltage to Manager.cpp
     +    Servo_Task     -> Run servo !
+    +    Camera_Task    -> WaitSend(ssid,pass) - > Camera && Send command control led -> Camera
  */
 
 
@@ -33,6 +39,7 @@ extern uint8_t  g_Direction;
 extern uint8_t  g_Servo_one;
 extern uint8_t  g_Servo_two;
 //Value of Camera
+extern String s_id,s_pw;
 extern uint8_t  g_Led;
 //Value of APIKEY Config
 extern uint8_t  g_Runset;

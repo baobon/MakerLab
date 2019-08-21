@@ -16,6 +16,7 @@ Vietduino_Servo servo_two;
 CREATE_FUNCTION(Run_Servo) {
  servo_one.begin(SERVO_ONE_PIN);
  servo_two.begin(SERVO_TWO_PIN);
+ 
  while (!false) {
    servo_one.write_for(g_Servo_one, 100);
    servo_two.write_for(g_Servo_two, 100);

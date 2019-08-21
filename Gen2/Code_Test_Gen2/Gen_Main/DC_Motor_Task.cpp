@@ -4,7 +4,7 @@
 #if defined(RUN_MOTOR_DC)
 
 #include "Gen_Debug.h"
-#include "Vietduino_NewFunction.h"
+// #include "Vietduino_NewFunction.h"
 
 Vietduino_DCmotor motorLeft(LEFT_MOTOR);
 Vietduino_DCmotor motorRight(RIGHT_MOTOR);

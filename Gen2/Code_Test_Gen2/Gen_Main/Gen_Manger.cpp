@@ -5,18 +5,21 @@
 #include "Gen_Manager.h"
 #include "Gen_Debug.h"
 #include "Voltage_Task.h"
+#include "Camera_Task.h"
 // #include "Gen_IO.h"
 
 /*
     Value
  */
 
+//Value of Camera
+String s_id, s_pw;
+uint8_t g_Led = 0;
 //Value of APIKEY Controller
 uint8_t g_Speed = 0;
 uint8_t g_Direction = 5;
 uint8_t g_Servo_one = 90;
 uint8_t g_Servo_two = 90;
-uint8_t g_Led = 0;
 //Value of APIKEY Config
 uint8_t g_Runset = 0;
 uint8_t g_Confirm = 0;
@@ -25,7 +28,7 @@ String g_PASS = "";
 //Value of Controller
 uint8_t g_Controller = 0;
 //Value of Config
-unsigned long cf_time_led =0;
+unsigned long cf_time_led = 0;
 unsigned long cf_time_rst;
 
 String command;
@@ -47,7 +50,9 @@ CREATE_FUNCTION(WiFi_ReadCommand)
 {
   Eprom.begin();
   WiFi.mode(WIFI_AP);
-  WiFi.softAP(Eprom.readId(), Eprom.readPw());
+  s_id = Eprom.readId();
+  s_pw = Eprom.readPw();
+  WiFi.softAP(s_id, s_pw);
   GEN_PRINTLN();
   GEN_PRINT("ssid : ");
   GEN_PRINTLN(Eprom.readId());
@@ -84,8 +89,6 @@ CREATE_FUNCTION(WiFi_ReadCommand)
   END_CREATE_FUNCTION
 }
 
-
-
 /// This void to send Voltage Data ///
 void HTTP_handleRoot(void)
 {
@@ -94,14 +97,16 @@ void HTTP_handleRoot(void)
   {
     Serial.println(server.arg("Makershop"));
   }
-  server.send(200, "text/html", "Voltage=" + voltage);
+  server.send(200, "text/html", "Voltage=" + voltage + ",  IPAddress=" + c_ipaddress);
+  // GEN_PRINTLN(c_ipaddress);
 }
 
 // **-----> This Funtion to help user Restore App to Default ! <------**
 CREATE_FUNCTION(RestoreGen)
 {
   Eprom.waitRestore(SSID_NORMAL, PASS_NORMAL);
-  M_DELAY(0);
+    GEN_PRINTLN(c_ipaddress);
+  M_DELAY(1000);
   END_CREATE_FUNCTION
 }
 

@@ -1,11 +1,13 @@
-#ifndef __Gen_Debug_H_
+#ifndef __GEN_DEBUG_H__
+#define __GEN_DEBUG_H__
+
 
 /*
    Debug
 */
 
 /* Uncomment to enable printing out nice debug messages. */
-#define DEBUG_GEN 
+// #define DEBUG_GEN 
 
 #define DEBUG_PRINTER Serial /**< Define where debug output will be printed. */
 /* Setup debug printing macros. */

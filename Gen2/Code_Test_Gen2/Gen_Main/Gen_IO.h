@@ -38,15 +38,19 @@
 #define PW          "PASS"
 #define SSID_NORMAL        "MakerShop_Gen2"
 #define PASS_NORMAL        "123456789"
-
+#define IP_ADDRESS          "IPCAMERA"
 
 /*
  * ENABLE/DISABLE DEBUG
  * Un Comment to DISABLE
  */
 
+
 //  -->  DC_Motor  <--  //
 #define RUN_MOTOR_DC
+
+//  -->  Camera  <--  //
+#define RUN_CAMERA
 
 //  -->  Voltage Read  <--  //
 #define VOLTAGE_READ
