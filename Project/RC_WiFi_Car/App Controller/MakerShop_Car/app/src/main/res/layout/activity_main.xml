@@ -16,7 +16,9 @@
             android:id="@+id/CameraView"
             android:layout_width="fill_parent"
             android:visibility="invisible"
-            android:layout_height="fill_parent"></WebView>
+            android:layout_height="fill_parent">
+
+        </WebView>
 
         <RelativeLayout
             android:layout_width="match_parent"
