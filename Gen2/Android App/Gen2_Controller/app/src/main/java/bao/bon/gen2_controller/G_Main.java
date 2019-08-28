@@ -1,17 +1,25 @@
 package bao.bon.gen2_controller;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Paint;
+import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -29,37 +37,46 @@ import bao.bon.gen2_controller.Constructor.Common;
 
 public class G_Main extends AppCompatActivity {
 
-    private static String voltage,address;
-    ImageView imgLight,imgBaterry;
+    private static String voltage, address;
+    ImageView imgLight, imgBaterry, imgWiFi;
     TextView txtSpeed;
     SeekBar seekBarSpeed;
+    ImageView btn_Mode;
 
     ImageView btn_Backward, btn_Forward, btn_Left, btn_Right;
     ImageView btn_servoUp, btn_servoDown, btn_servoLeft, btn_servoRight;
     ImageView btn_Audio;
     ImageView btn_Camera;
-    TextView txt_Battery,txtDebug;
+    TextView txt_Battery, txtDebug;
 
     Common commondata;
 
     private volatile boolean stopThread = false;
     private volatile boolean stopAudio = false;
-
+    private volatile boolean camera_available = true;
     int servo_post = 10;
-    int realvoltage;
     String g_voltage;
     String c_ipaddress;
 
-
     MediaPlayer background_music;
-
-
 
     /*
     Webview Send
      */
 
     WebView webView_send, cameraView;
+
+    /*
+        WiFi Animation
+     */
+    Animation animationAlpha;
+    ConnectivityManager conManager;
+    NetworkInfo _wifi;
+
+    /*
+        Sensor Listenner
+     */
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,60 +85,80 @@ public class G_Main extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.g_main);
-
-
-        /*
-
-            Default data
-         */
-        commondata = new Common("0", "5", 90, 90, "0", 100);
-
-        hideSystemUI(); //      --> Hide Task !
         innitView();
+        Toast.makeText(G_Main.this, "Select Mode Run Manual !!!", Toast.LENGTH_LONG).show();
+        /*
+            WiFi Animaiton
+        */
+        wiFi_Animation();
+        /*
+            Default data
+        */
+        commondata = new Common("0", "5", 90, 90, "0", 100);
+        /*
+            Hide UI
+        */
+        hideSystemUI(); //      --> Hide Task !
         lightDetect();  //      --> Detect Light
         speedDetect();  //      --->Detect Speed
         /*
-        Send_data to Gen2_Board
-         */
+            Send_data to Gen2_Board
+        */
         command_Data();
         send_Data();
-
-               /*
+        /*
             Music for App
-         */
-//        runMusicbackground();
+        */
         musicBackground();
-
         /*
-        Controller Data
-         */
+            Controller Data
+        */
         handing_direction();
-
         /*
-        Read Voltage && IP Address
+            Read Voltage && IP Address
          */
-
         read_Voltage_API();
-
         /*
-        Open Camera
-         */
-
+            Open Camera
+        */
         ViewCamera();
-
         /*
-        Debug
-         */
-        Debug_app();
-
+            Mode intent Activity !!!!
+        */
+        selectMode();
 
     }
 
+    private void wiFi_Animation() {
+        conManager = (ConnectivityManager) this.getSystemService(CONNECTIVITY_SERVICE);
+        animationAlpha = AnimationUtils.loadAnimation(this, R.anim.anim_alpha);
+        imgWiFi.startAnimation(animationAlpha);
 
-
-    public void play( ){
-        if(background_music == null){
-            background_music = MediaPlayer.create(this,R.raw.backgroundsong);
+        imgWiFi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkWiFi_status();
+            }
+        });
+    }
+    private void checkWiFi_status() {
+        Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+        G_Main.this.startActivity(intent);
+        animationAlpha.cancel();
+    }
+    private void wiFiCheck() {
+        _wifi = conManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (!_wifi.isAvailable()) {
+            imgWiFi.setImageResource(R.drawable.wifi_connect_one);
+            imgWiFi.startAnimation(animationAlpha);
+        } else if (_wifi.isAvailable()) {
+            animationAlpha.cancel();
+            imgWiFi.setImageResource(R.drawable.wifi_ok);
+        }
+    }
+    public void play() {
+        if (background_music == null) {
+            background_music = MediaPlayer.create(this, R.raw.backgroundsong);
         }
         background_music.start();
         background_music.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -131,41 +168,30 @@ public class G_Main extends AppCompatActivity {
             }
         });
     }
-
-
-    public void stopPlayer(){
-        if(background_music!= null){
+    public void stopPlayer() {
+        if (background_music != null) {
             background_music.release();
             background_music = null;
-            Toast.makeText(this, "Stop Music", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Stop Music", Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
-    private void musicBackground(){
+    private void musicBackground() {
         play();
         btn_Audio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               if(stopAudio == false){
-                   stopAudio = true;
-                   btn_Audio.setImageResource(R.drawable.muted);
-                   stopPlayer();
-               }else if(stopAudio == true){
-                   btn_Audio.setImageResource(R.drawable.volume);
-                   stopAudio = false;
-                   play();
-               }
+                if (stopAudio == false) {
+                    stopAudio = true;
+                    btn_Audio.setImageResource(R.drawable.muted);
+                    stopPlayer();
+                } else if (stopAudio == true) {
+                    btn_Audio.setImageResource(R.drawable.volume);
+                    stopAudio = false;
+                    play();
+                }
             }
         });
     }
-
-    private void Debug_app() {
-//        txtDebug.setText(c_ipaddress);
-//        txt_Battery.setText(g_voltage);
-    }
-
     private void ViewCamera() {
 
         cameraView.setWebViewClient(new WebViewClient() {
@@ -187,9 +213,9 @@ public class G_Main extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (cameraView.getVisibility() == View.INVISIBLE) {
-                    if(c_ipaddress != null){
+                    if (c_ipaddress != null) {
                         cameraView.setVisibility(View.VISIBLE);
-                    }else{
+                    } else {
                         cameraView.setVisibility(View.INVISIBLE);
                         Toast.makeText(G_Main.this, "Please check if the camera is connected !!!", Toast.LENGTH_SHORT).show();
                     }
@@ -200,14 +226,13 @@ public class G_Main extends AppCompatActivity {
             }
         });
     }
-
     private void read_Voltage_API() {
-        final Thread readVol = new Thread() {
+        Thread readVol = new Thread() {
             @Override
             public void run() {
                 while (!isInterrupted()) {
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(5000);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -217,16 +242,25 @@ public class G_Main extends AppCompatActivity {
                                         g_voltage = readvoltage(result);
                                         c_ipaddress = readAddess(result);
 //                                        txtDebug.setText(c_ipaddress);
-                                        txt_Battery.setText(g_voltage +" ");
-                                            cameraView.loadUrl("http://"+c_ipaddress);
-                                        float realvoltage =  Float.parseFloat(g_voltage);
-                                        if(realvoltage>8){
+                                        txt_Battery.setText(g_voltage + " ");
+                                        if (c_ipaddress != null) {
+//                                            wiFiAnimation.start();
+                                        } else if (c_ipaddress == null) {
+//                                            wiFiAnimation.start();
+                                        }
+                                        if (camera_available == true) {
+                                            cameraView.loadUrl("http://" + c_ipaddress);
+                                        } else if (camera_available == false) {
+                                            cameraView.loadUrl("http://192.168.4.1");
+                                        }
+                                        float realvoltage = Float.parseFloat(g_voltage);
+                                        if (realvoltage > 8) {
                                             imgBaterry.setImageResource(R.drawable.battery_full);
-                                        }else if (realvoltage > 7.5 && realvoltage <8 ){
+                                        } else if (realvoltage > 7.5 && realvoltage < 8) {
                                             imgBaterry.setImageResource(R.drawable.battery_midle);
-                                        }else if(realvoltage > 7.2 && realvoltage <7.5){
+                                        } else if (realvoltage > 7.2 && realvoltage < 7.5) {
                                             imgBaterry.setImageResource(R.drawable.battery_low);
-                                        }else if(realvoltage < 7.2){
+                                        } else if (realvoltage < 7.2) {
                                             imgBaterry.setImageResource(R.drawable.battery_emty);
                                         }
 
@@ -242,7 +276,6 @@ public class G_Main extends AppCompatActivity {
         };
         readVol.start();
     }
-
     private void handing_direction() {
 
         /*
@@ -257,7 +290,6 @@ public class G_Main extends AppCompatActivity {
                     btn_Forward.setImageResource(R.drawable.top_on);
 //                    Toast.makeText(G_Main.this, "Action Down", Toast.LENGTH_SHORT).show();
                     commondata.setDirection("3");
-//                    send_Data();
                     start_Thread();
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
 //                    Toast.makeText(G_Main.this, "Action Up", Toast.LENGTH_SHORT).show();
@@ -351,7 +383,7 @@ public class G_Main extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     btn_servoRight.setImageResource(R.drawable.btnright_on);
-                    if (commondata.getServo_one() >= 0 && commondata.getServo_one() <= 180-servo_post) {
+                    if (commondata.getServo_one() >= 0 && commondata.getServo_one() <= 180 - servo_post) {
                         commondata.setServo_one(commondata.getServo_one() + servo_post);
                         send_Data();
                     }
@@ -367,7 +399,7 @@ public class G_Main extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     btn_servoUp.setImageResource(R.drawable.btntop_on);
-                    if (commondata.getGetServo_two() >= 0 && commondata.getGetServo_two() <= 180-servo_post) {
+                    if (commondata.getGetServo_two() >= 0 && commondata.getGetServo_two() <= 180 - servo_post) {
                         commondata.setGetServo_two(commondata.getGetServo_two() + servo_post);
                         send_Data();
                     }
@@ -396,12 +428,10 @@ public class G_Main extends AppCompatActivity {
 
 
     }
-
     private void send_Data() {
         webView_send.setWebViewClient(new WebViewClient());
         webView_send.loadUrl(command_Data());
     }
-
     private String command_Data() {
         String dataSend = "http://192.168.4.1/?Makershop=,"
                 + "Speed=" + commondata.getSpeed() + ","
@@ -411,7 +441,6 @@ public class G_Main extends AppCompatActivity {
                 + "Led=" + commondata.getLed() + ",";
         return dataSend;
     }
-
     private void speedDetect() {
         seekBarSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -432,7 +461,6 @@ public class G_Main extends AppCompatActivity {
             }
         });
     }
-
     private void lightDetect() {
         imgLight.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -452,12 +480,11 @@ public class G_Main extends AppCompatActivity {
             }
         });
     }
-
     private void innitView() {
         txt_Battery = findViewById(R.id.textViewBaterry);
         txtDebug = findViewById(R.id.textViewDebug);
         imgLight = findViewById(R.id.imageViewLight);
-        imgBaterry  = findViewById(R.id.imageViewBaterry);
+        imgBaterry = findViewById(R.id.imageViewBaterry);
 
 
         txtSpeed = findViewById(R.id.textViewSpeed);
@@ -477,9 +504,10 @@ public class G_Main extends AppCompatActivity {
 
         cameraView = findViewById(R.id.CameraView);
         btn_Camera = findViewById(R.id.imageCamera);
+        btn_Mode = findViewById(R.id.imageViewMode);
+        imgWiFi = findViewById(R.id.imageViewWiFi);
 
     }
-
     private void hideSystemUI() {
         // Enables regular immersive mode.
         // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
@@ -496,42 +524,48 @@ public class G_Main extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
-
+    private void selectMode() {
+        btn_Mode.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Toast.makeText(G_Main.this, "Select Mode Accelerometer !!!", Toast.LENGTH_SHORT).show();
+                camera_available = false;
+                stopPlayer();
+                Intent intentAccelerometer = new Intent(G_Main.this, Accelerometer.class);
+                startActivity(intentAccelerometer);
+                return false;
+            }
+        });
+    }
     void start_Thread() {
         stopThread = false;
         SendRunable runable = new SendRunable(10000);
-//        runable.run();
         new Thread(runable).start();
     }
-
     void stop_Thread() {
         stopThread = true;
     }
-
     public static String readvoltage(String b_voltage) {
-        try{
+        try {
             b_voltage.trim();
             int vtCuoi1 = b_voltage.lastIndexOf("e=");
             int vtCuoi2 = b_voltage.lastIndexOf(",");
             voltage = b_voltage.substring(vtCuoi1 + 2, vtCuoi2);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             voltage = "0";
         }
         return voltage;
     }
-
     public static String readAddess(String b_ipadress_) {
-        try{
+        try {
             b_ipadress_.trim();
             int vtCuoi1 = b_ipadress_.lastIndexOf("s=");
             address = b_ipadress_.substring(vtCuoi1 + 2);
-//            return address;
-        }catch (Exception ex){
+        } catch (Exception ex) {
             address = null;
         }
         return address;
     }
-
     class SendRunable implements Runnable {
         int seconds;
 
@@ -549,8 +583,6 @@ public class G_Main extends AppCompatActivity {
                         send_Data();
                     }
                 });
-
-//                Log.d(TAG,"startThread" + i);
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -558,6 +590,24 @@ public class G_Main extends AppCompatActivity {
                 }
             }
         }
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopPlayer();
+    }
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        play();
+        camera_available = true;
+        cameraView.setVisibility(View.INVISIBLE);
+        wiFiCheck();
+        hideSystemUI(); //      --> Hide Task !
     }
 
 
