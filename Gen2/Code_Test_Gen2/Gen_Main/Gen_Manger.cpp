@@ -106,7 +106,7 @@ CREATE_FUNCTION(RestoreGen)
 {
   Eprom.waitRestore(SSID_NORMAL, PASS_NORMAL);
     GEN_PRINTLN(c_ipaddress);
-  M_DELAY(1000);
+  M_DELAY(0);
   END_CREATE_FUNCTION
 }
 

@@ -3,9 +3,10 @@
 
 uint8_t addrid = 0;
 
-Gen_EPROM::Gen_EPROM(uint8_t b_outPin, uint8_t b_restore)
+Gen_EPROM::Gen_EPROM(uint8_t b_outPin, uint8_t b_outLed , uint8_t b_restore)
 {
   this-> outPin = b_outPin;
+  this-> outLed = b_outLed;
   this-> restore = b_restore;
   this-> timer_Rst_max = TIME_RS_MAX;
   this-> timer_Rst = TIME_ZERO;
@@ -16,25 +17,26 @@ Gen_EPROM::Gen_EPROM(uint8_t b_outPin, uint8_t b_restore)
 void Gen_EPROM::begin() {
   EEPROM.begin(512);
   pinMode(this->outPin, INPUT);
-  pinMode(PINLED, OUTPUT);
-  digitalWrite(PINLED, HIGH);
+  pinMode(this->outLed, OUTPUT);
   DEBUG_PRINTLN(F("Start Debug EPROM_Gen_Restore"));
 }
 
 
-void Gen_EPROM::waitRestore() {
+void Gen_EPROM::waitRestore(String w_id,String w_pw) {
+  // if(pF_Warning)pF_Warning();
+
   if (digitalRead(this->outPin) == 1 && this->restore == 1) {
     this->timer_Rst = millis();
   } else if (digitalRead(this->outPin) == 0 && this->restore == 1) {
     if (millis() - this->timer_Led >= this->timer_LedMax) {
       timer_Led = millis();
-      digitalWrite(PINLED, !digitalRead(PINLED));
+      digitalWrite(this->outLed, !digitalRead(this->outLed));
     }
     if (millis() - this->timer_Rst >= this->timer_Rst_max)
     {
       write(G_SSID,G_PASS);
       DEBUG_PRINTLN(F("RST Compile"));
-      digitalWrite(PINLED, LOW);
+      digitalWrite(this->outLed, LOW);
       this->restore = 0;
     }
   }

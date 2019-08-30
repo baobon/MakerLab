@@ -55,24 +55,28 @@
 
 #define DEFAULTPIN         A0
 #define PINLED              2
-#define TIME_RS_MAX      (6000);
+#define TIME_RS_MAX      (10000);
 #define TIME_ZERO          (0)
 #define TIME_LED_MAX     (100);
-
+extern "C" {
+  typedef void (*Warning_Function)();
+}
 
 class Gen_EPROM {
   public:
+    Warning_Function pF_Warning;
     //  Contructor
-    Gen_EPROM(uint8_t b_outPin = 0, uint8_t b_restore = 1);
+    // Gen_EPROM(uint8_t b_outPin , uint8_t b_restore = 1);
+    Gen_EPROM(uint8_t b_outPin , uint8_t b_outLed, uint8_t b_restore = 1);
     //  Funtion
     void begin();
     void write(String b_id, String b_pass);
-    void waitRestore();
+    void waitRestore(String w_ssid,String w_pass);
     String readId();
     String readPw();
     //  Value
-    String b_ssid, b_pass;
-    uint8_t outPin, restore;
+    String b_ssid, b_pass,w_ssid,w_pass;
+    uint8_t outPin, restore , outLed;
     unsigned long timer_Rst_max;
     unsigned long timer_Rst;
     unsigned long timer_Led;

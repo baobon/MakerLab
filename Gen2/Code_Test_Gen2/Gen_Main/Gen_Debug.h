@@ -7,7 +7,7 @@
 */
 
 /* Uncomment to enable printing out nice debug messages. */
-// #define DEBUG_GEN 
+ #define DEBUG_GEN 
 
 #define DEBUG_PRINTER Serial /**< Define where debug output will be printed. */
 /* Setup debug printing macros. */
