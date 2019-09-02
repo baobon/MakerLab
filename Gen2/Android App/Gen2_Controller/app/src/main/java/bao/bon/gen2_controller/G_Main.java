@@ -1,9 +1,12 @@
 package bao.bon.gen2_controller;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
@@ -24,9 +27,12 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,45 +44,39 @@ import bao.bon.gen2_controller.Constructor.Common;
 public class G_Main extends AppCompatActivity {
 
     private static String voltage, address;
-    ImageView imgLight, imgBaterry, imgWiFi;
+    ImageView imgLight, imgBaterry, imgWiFi, imgSetting;
     TextView txtSpeed;
     SeekBar seekBarSpeed;
     ImageView btn_Mode;
-
     ImageView btn_Backward, btn_Forward, btn_Left, btn_Right;
     ImageView btn_servoUp, btn_servoDown, btn_servoLeft, btn_servoRight;
     ImageView btn_Audio;
     ImageView btn_Camera;
     TextView txt_Battery, txtDebug;
-
     Common commondata;
-
     private volatile boolean stopThread = false;
     private volatile boolean stopAudio = false;
     private volatile boolean camera_available = true;
-    int servo_post = 10;
+    int servo_post_one,servo_post_two;
     String g_voltage;
     String c_ipaddress;
-
     MediaPlayer background_music;
-
     /*
     Webview Send
      */
-
     WebView webView_send, cameraView;
-
     /*
         WiFi Animation
      */
     Animation animationAlpha;
     ConnectivityManager conManager;
     NetworkInfo _wifi;
-
     /*
-        Sensor Listenner
+    Prefersences shared
      */
-
+    private final String SHARED_PREFERSENCES_NAME = "Makershop";
+    private final String SERVO_POST_ONE = "ServoPostOne";
+    private final String SERVO_POST_TWO = "ServoPostTwo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +91,7 @@ public class G_Main extends AppCompatActivity {
             WiFi Animaiton
         */
         wiFi_Animation();
+        readData();
         /*
             Default data
         */
@@ -127,6 +128,56 @@ public class G_Main extends AppCompatActivity {
         */
         selectMode();
 
+        /*
+            Preferences Data servo_post intent
+        */
+        SettingDialog();
+
+
+    }
+
+    private void SettingDialog() {
+        imgSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(G_Main.this);
+                View mView = getLayoutInflater().inflate(R.layout.dialog_postive, null);
+                mBuilder.setTitle("      Setting Edu Motor Controller");
+                final Spinner spinnerServoOne = mView.findViewById(R.id.spinner_postive_one);
+                final Spinner spinnerServoTwo = mView.findViewById(R.id.spinner_postive_two);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(G_Main.this,
+                        android.R.layout.simple_spinner_item,
+                        getResources().getStringArray(R.array.postiveList));
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerServoOne.setAdapter(adapter);
+                spinnerServoTwo.setAdapter(adapter);
+                mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (!spinnerServoOne.getSelectedItem().toString().equalsIgnoreCase("5")
+                                & !spinnerServoTwo.getSelectedItem().toString().equalsIgnoreCase("5")) {
+                            addData(Integer.parseInt(spinnerServoOne.getSelectedItem().toString()),
+                                    Integer.parseInt(spinnerServoTwo.getSelectedItem().toString()));
+                            Toast.makeText(G_Main.this, "Edit Servo One Postive to " + spinnerServoOne.getSelectedItem().toString()
+                                    + "\nServo Two Postive to " + spinnerServoOne.getSelectedItem().toString()
+                                    , Toast.LENGTH_SHORT).show();
+                            dialogInterface.dismiss();
+                        } else {
+                            Toast.makeText(G_Main.this, "Please select any empty fields ", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                mBuilder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                mBuilder.setView(mView);
+                AlertDialog dialog = mBuilder.create();
+                dialog.show();
+            }
+        });
     }
 
     private void wiFi_Animation() {
@@ -141,11 +192,13 @@ public class G_Main extends AppCompatActivity {
             }
         });
     }
+
     private void checkWiFi_status() {
         Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
         G_Main.this.startActivity(intent);
         animationAlpha.cancel();
     }
+
     private void wiFiCheck() {
         _wifi = conManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         if (!_wifi.isAvailable()) {
@@ -156,6 +209,7 @@ public class G_Main extends AppCompatActivity {
             imgWiFi.setImageResource(R.drawable.wifi_ok);
         }
     }
+
     public void play() {
         if (background_music == null) {
             background_music = MediaPlayer.create(this, R.raw.backgroundsong);
@@ -168,6 +222,7 @@ public class G_Main extends AppCompatActivity {
             }
         });
     }
+
     public void stopPlayer() {
         if (background_music != null) {
             background_music.release();
@@ -175,6 +230,7 @@ public class G_Main extends AppCompatActivity {
 //            Toast.makeText(this, "Stop Music", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void musicBackground() {
         play();
         btn_Audio.setOnClickListener(new View.OnClickListener() {
@@ -192,6 +248,7 @@ public class G_Main extends AppCompatActivity {
             }
         });
     }
+
     private void ViewCamera() {
 
         cameraView.setWebViewClient(new WebViewClient() {
@@ -226,6 +283,7 @@ public class G_Main extends AppCompatActivity {
             }
         });
     }
+
     private void read_Voltage_API() {
         Thread readVol = new Thread() {
             @Override
@@ -276,6 +334,7 @@ public class G_Main extends AppCompatActivity {
         };
         readVol.start();
     }
+
     private void handing_direction() {
 
         /*
@@ -367,9 +426,10 @@ public class G_Main extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     btn_servoLeft.setImageResource(R.drawable.btnleft_on);
-                    if (commondata.getServo_one() >= servo_post && commondata.getServo_one() <= 180) {
-                        commondata.setServo_one(commondata.getServo_one() - servo_post);
+                    if (commondata.getServo_one() >= servo_post_one && commondata.getServo_one() <= 180) {
+                        commondata.setServo_one(commondata.getServo_one() - servo_post_one);
                         send_Data();
+                        Toast.makeText(G_Main.this, String.valueOf(servo_post_one), Toast.LENGTH_SHORT).show();
                     }
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     btn_servoLeft.setImageResource(R.drawable.btnleft);
@@ -383,9 +443,10 @@ public class G_Main extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     btn_servoRight.setImageResource(R.drawable.btnright_on);
-                    if (commondata.getServo_one() >= 0 && commondata.getServo_one() <= 180 - servo_post) {
-                        commondata.setServo_one(commondata.getServo_one() + servo_post);
+                    if (commondata.getServo_one() >= 0 && commondata.getServo_one() <= 180 - servo_post_one) {
+                        commondata.setServo_one(commondata.getServo_one() + servo_post_one);
                         send_Data();
+                        Toast.makeText(G_Main.this, String.valueOf(servo_post_one), Toast.LENGTH_SHORT).show();
                     }
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     btn_servoRight.setImageResource(R.drawable.btnright);
@@ -399,8 +460,8 @@ public class G_Main extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     btn_servoUp.setImageResource(R.drawable.btntop_on);
-                    if (commondata.getGetServo_two() >= 0 && commondata.getGetServo_two() <= 180 - servo_post) {
-                        commondata.setGetServo_two(commondata.getGetServo_two() + servo_post);
+                    if (commondata.getGetServo_two() >= 0 && commondata.getGetServo_two() <= 180 - servo_post_two) {
+                        commondata.setGetServo_two(commondata.getGetServo_two() + servo_post_two);
                         send_Data();
                     }
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
@@ -415,8 +476,8 @@ public class G_Main extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 btn_servoDown.setImageResource(R.drawable.btnbottom_on);
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (commondata.getGetServo_two() >= servo_post && commondata.getGetServo_two() <= 180) {
-                        commondata.setGetServo_two(commondata.getGetServo_two() - servo_post);
+                    if (commondata.getGetServo_two() >= servo_post_two && commondata.getGetServo_two() <= 180) {
+                        commondata.setGetServo_two(commondata.getGetServo_two() - servo_post_two);
                         send_Data();
                     }
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
@@ -428,10 +489,12 @@ public class G_Main extends AppCompatActivity {
 
 
     }
+
     private void send_Data() {
         webView_send.setWebViewClient(new WebViewClient());
         webView_send.loadUrl(command_Data());
     }
+
     private String command_Data() {
         String dataSend = "http://192.168.4.1/?Makershop=,"
                 + "Speed=" + commondata.getSpeed() + ","
@@ -441,6 +504,7 @@ public class G_Main extends AppCompatActivity {
                 + "Led=" + commondata.getLed() + ",";
         return dataSend;
     }
+
     private void speedDetect() {
         seekBarSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -461,6 +525,7 @@ public class G_Main extends AppCompatActivity {
             }
         });
     }
+
     private void lightDetect() {
         imgLight.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -480,6 +545,7 @@ public class G_Main extends AppCompatActivity {
             }
         });
     }
+
     private void innitView() {
         txt_Battery = findViewById(R.id.textViewBaterry);
         txtDebug = findViewById(R.id.textViewDebug);
@@ -506,8 +572,10 @@ public class G_Main extends AppCompatActivity {
         btn_Camera = findViewById(R.id.imageCamera);
         btn_Mode = findViewById(R.id.imageViewMode);
         imgWiFi = findViewById(R.id.imageViewWiFi);
+        imgSetting = findViewById(R.id.imageViewSetting);
 
     }
+
     private void hideSystemUI() {
         // Enables regular immersive mode.
         // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
@@ -524,6 +592,7 @@ public class G_Main extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
+
     private void selectMode() {
         btn_Mode.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -537,14 +606,17 @@ public class G_Main extends AppCompatActivity {
             }
         });
     }
+
     void start_Thread() {
         stopThread = false;
         SendRunable runable = new SendRunable(10000);
         new Thread(runable).start();
     }
+
     void stop_Thread() {
         stopThread = true;
     }
+
     public static String readvoltage(String b_voltage) {
         try {
             b_voltage.trim();
@@ -556,6 +628,7 @@ public class G_Main extends AppCompatActivity {
         }
         return voltage;
     }
+
     public static String readAddess(String b_ipadress_) {
         try {
             b_ipadress_.trim();
@@ -566,6 +639,7 @@ public class G_Main extends AppCompatActivity {
         }
         return address;
     }
+
     class SendRunable implements Runnable {
         int seconds;
 
@@ -591,15 +665,40 @@ public class G_Main extends AppCompatActivity {
             }
         }
     }
+
+    /*
+    References
+     */
+    public void addData(int postive_one,int postive_two) {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERSENCES_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit(); //Open file shared
+        editor.putInt(SERVO_POST_ONE, postive_one);
+        editor.putInt(SERVO_POST_TWO, postive_two);
+        editor.apply();
+    }
+
+    public void readData() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERSENCES_NAME, MODE_PRIVATE);
+        servo_post_one = sharedPreferences.getInt(SERVO_POST_ONE, 5);
+        servo_post_two = sharedPreferences.getInt(SERVO_POST_TWO, 5);
+    }
+
+
+
+    /*
+    Override
+     */
     @Override
     protected void onStop() {
         super.onStop();
         stopPlayer();
     }
+
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -609,6 +708,4 @@ public class G_Main extends AppCompatActivity {
         wiFiCheck();
         hideSystemUI(); //      --> Hide Task !
     }
-
-
 }

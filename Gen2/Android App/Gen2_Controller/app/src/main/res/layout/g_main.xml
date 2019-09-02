@@ -269,12 +269,9 @@
                 android:id="@+id/imageCamera"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/guideline9"
-                app:layout_constraintHorizontal_bias="0.133"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageViewSetting"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/camera" />
 
@@ -292,11 +289,8 @@
                 android:id="@+id/img_Audio"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageCamera"
-                app:layout_constraintEnd_toStartOf="@+id/guideline"
-                app:layout_constraintHorizontal_bias="0.25"
                 app:layout_constraintStart_toEndOf="@+id/imageCamera"
                 app:layout_constraintTop_toTopOf="@+id/imageCamera"
                 app:srcCompat="@drawable/volume" />
@@ -305,7 +299,7 @@
                 android:id="@+id/imageViewBaterry"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -315,6 +309,7 @@
                 android:id="@+id/textViewBaterry"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_marginTop="8dp"
                 android:fontFamily="@font/calligraffitti"
                 android:gravity="center"
                 android:text="100%"
@@ -341,10 +336,20 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="4dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textViewBaterry"
+                app:layout_constraintBottom_toBottomOf="@+id/imageViewBaterry"
                 app:layout_constraintEnd_toStartOf="@+id/textViewBaterry"
-                app:layout_constraintTop_toTopOf="@+id/textViewBaterry"
+                app:layout_constraintTop_toTopOf="@+id/imageViewBaterry"
                 app:srcCompat="@drawable/wifi_connect_one" />
+
+            <ImageView
+                android:id="@+id/imageViewSetting"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/settings" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
