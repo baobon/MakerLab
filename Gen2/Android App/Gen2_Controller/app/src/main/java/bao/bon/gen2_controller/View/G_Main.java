@@ -1,4 +1,4 @@
-package bao.bon.gen2_controller;
+package bao.bon.gen2_controller.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -7,16 +7,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Paint;
-import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -28,8 +24,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -40,6 +34,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import bao.bon.gen2_controller.Constructor.Common;
+import bao.bon.gen2_controller.R;
 
 public class G_Main extends AppCompatActivity {
 
@@ -142,9 +137,15 @@ public class G_Main extends AppCompatActivity {
             public void onClick(View view) {
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(G_Main.this);
                 View mView = getLayoutInflater().inflate(R.layout.dialog_postive, null);
-                mBuilder.setTitle("      Setting Edu Motor Controller");
+
+                final TextView txtLastPostionOne = mView.findViewById(R.id.lastposition_one);
+                final TextView txtLastPostionTwo = mView.findViewById(R.id.lastposition_two);
                 final Spinner spinnerServoOne = mView.findViewById(R.id.spinner_postive_one);
                 final Spinner spinnerServoTwo = mView.findViewById(R.id.spinner_postive_two);
+                readData();
+                txtLastPostionOne.setText(String.valueOf(servo_post_one));
+                txtLastPostionTwo.setText(String.valueOf(servo_post_two));
+
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(G_Main.this,
                         android.R.layout.simple_spinner_item,
                         getResources().getStringArray(R.array.postiveList));
@@ -154,12 +155,14 @@ public class G_Main extends AppCompatActivity {
                 mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if (!spinnerServoOne.getSelectedItem().toString().equalsIgnoreCase("5")
-                                & !spinnerServoTwo.getSelectedItem().toString().equalsIgnoreCase("5")) {
+                        if (!spinnerServoOne.getSelectedItem().toString().equalsIgnoreCase("Select..")
+                                & !spinnerServoTwo.getSelectedItem().toString().equalsIgnoreCase("Select..")) {
                             addData(Integer.parseInt(spinnerServoOne.getSelectedItem().toString()),
                                     Integer.parseInt(spinnerServoTwo.getSelectedItem().toString()));
-                            Toast.makeText(G_Main.this, "Edit Servo One Postive to " + spinnerServoOne.getSelectedItem().toString()
-                                    + "\nServo Two Postive to " + spinnerServoOne.getSelectedItem().toString()
+                            commondata.setServo_one(Integer.parseInt(spinnerServoOne.getSelectedItem().toString()));
+                            commondata.setServo_two(Integer.parseInt(spinnerServoTwo.getSelectedItem().toString()));
+                            Toast.makeText(G_Main.this, "Servo One Postive to " + spinnerServoOne.getSelectedItem().toString()
+                                    + "\nServo Two Postive to " + spinnerServoTwo.getSelectedItem().toString()
                                     , Toast.LENGTH_SHORT).show();
                             dialogInterface.dismiss();
                         } else {
@@ -421,32 +424,15 @@ public class G_Main extends AppCompatActivity {
             }
         });
 
-        btn_servoLeft.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    btn_servoLeft.setImageResource(R.drawable.btnleft_on);
-                    if (commondata.getServo_one() >= servo_post_one && commondata.getServo_one() <= 180) {
-                        commondata.setServo_one(commondata.getServo_one() - servo_post_one);
-                        send_Data();
-                        Toast.makeText(G_Main.this, String.valueOf(servo_post_one), Toast.LENGTH_SHORT).show();
-                    }
-                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    btn_servoLeft.setImageResource(R.drawable.btnleft);
-                }
-                return true;
-            }
-        });
-
         btn_servoRight.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     btn_servoRight.setImageResource(R.drawable.btnright_on);
-                    if (commondata.getServo_one() >= 0 && commondata.getServo_one() <= 180 - servo_post_one) {
-                        commondata.setServo_one(commondata.getServo_one() + servo_post_one);
+                    if (commondata.getServo_one() >= servo_post_one && commondata.getServo_one() <= 180) {
+                        commondata.setServo_one(commondata.getServo_one() - servo_post_one);
                         send_Data();
-                        Toast.makeText(G_Main.this, String.valueOf(servo_post_one), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(G_Main.this, String.valueOf(servo_post_one), Toast.LENGTH_SHORT).show();
                     }
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     btn_servoRight.setImageResource(R.drawable.btnright);
@@ -455,17 +441,18 @@ public class G_Main extends AppCompatActivity {
             }
         });
 
-        btn_servoUp.setOnTouchListener(new View.OnTouchListener() {
+        btn_servoLeft.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    btn_servoUp.setImageResource(R.drawable.btntop_on);
-                    if (commondata.getGetServo_two() >= 0 && commondata.getGetServo_two() <= 180 - servo_post_two) {
-                        commondata.setGetServo_two(commondata.getGetServo_two() + servo_post_two);
+                    btn_servoLeft.setImageResource(R.drawable.btnleft_on);
+                    if (commondata.getServo_one() >= 0 && commondata.getServo_one() <= 180 - servo_post_one) {
+                        commondata.setServo_one(commondata.getServo_one() + servo_post_one);
                         send_Data();
+//                        Toast.makeText(G_Main.this, String.valueOf(servo_post_one), Toast.LENGTH_SHORT).show();
                     }
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    btn_servoUp.setImageResource(R.drawable.btntop);
+                    btn_servoLeft.setImageResource(R.drawable.btnleft);
                 }
                 return true;
             }
@@ -474,10 +461,10 @@ public class G_Main extends AppCompatActivity {
         btn_servoDown.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                btn_servoDown.setImageResource(R.drawable.btnbottom_on);
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (commondata.getGetServo_two() >= servo_post_two && commondata.getGetServo_two() <= 180) {
-                        commondata.setGetServo_two(commondata.getGetServo_two() - servo_post_two);
+                    btn_servoDown.setImageResource(R.drawable.btnbottom_on);
+                    if (commondata.getServo_two() >= 0 && commondata.getServo_two() <= 180 - servo_post_two) {
+                        commondata.setServo_two(commondata.getServo_two() + servo_post_two);
                         send_Data();
                     }
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
@@ -487,6 +474,21 @@ public class G_Main extends AppCompatActivity {
             }
         });
 
+        btn_servoUp.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                btn_servoUp.setImageResource(R.drawable.btntop_on);
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (commondata.getServo_two() >= servo_post_two && commondata.getServo_two() <= 180) {
+                        commondata.setServo_two(commondata.getServo_two() - servo_post_two);
+                        send_Data();
+                    }
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    btn_servoUp.setImageResource(R.drawable.btntop);
+                }
+                return true;
+            }
+        });
 
     }
 
@@ -500,7 +502,7 @@ public class G_Main extends AppCompatActivity {
                 + "Speed=" + commondata.getSpeed() + ","
                 + "Direction=" + commondata.getDirection() + ","
                 + "Servo_one=" + commondata.getServo_one() + ","
-                + "Servo_two=" + commondata.getGetServo_two() + ","
+                + "Servo_two=" + commondata.getServo_two() + ","
                 + "Led=" + commondata.getLed() + ",";
         return dataSend;
     }

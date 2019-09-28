@@ -3,4 +3,15 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <!-- color for button style -->
+    <color name="gradient_start_color">#5A8AF0</color>
+    <color name="gradient_end_color">#009BFF</color>
+
+    <!-- color for button style -->
+    <color name="tab_indicator_gray">#c0c0c0</color>
+    <color name="intro_tittle_color">#000000</color>
+    <color name="intro_description_color">#656565</color>
+
+
 </resources>

@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">WiFi DC Controller</string>
     <string name="desgin">---- Copyright by Makershop.vn ----</string>
-    
+    <string name="dialog_Tittle">Setting Edu Motor Controller</string>
+
     <string-array name="postiveList">
+        <item>Select..</item>
         <item>5</item>
         <item>10</item>
         <item>15</item>

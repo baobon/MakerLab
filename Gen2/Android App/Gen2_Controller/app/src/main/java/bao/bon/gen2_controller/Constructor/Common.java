@@ -5,15 +5,15 @@ public class Common {
     private String speed;
     private String direction;
     private int servo_one;
-    private int getServo_two;
+    private int servo_two;
     private String led;
     private int baterry;
 
-    public Common(String speed, String direction, int servo_one, int getServo_two, String led, int baterry) {
+    public Common(String speed, String direction, int servo_one, int servo_two, String led, int baterry) {
         this.speed = speed;
         this.direction = direction;
         this.servo_one = servo_one;
-        this.getServo_two = getServo_two;
+        this.servo_two = servo_two;
         this.led = led;
         this.baterry = baterry;
     }
@@ -42,12 +42,12 @@ public class Common {
         this.servo_one = servo_one;
     }
 
-    public int getGetServo_two() {
-        return getServo_two;
+    public int getServo_two() {
+        return servo_two;
     }
 
-    public void setGetServo_two(int getServo_two) {
-        this.getServo_two = getServo_two;
+    public void setServo_two(int getServo_two) {
+        this.servo_two = servo_two;
     }
 
     public String getLed() {

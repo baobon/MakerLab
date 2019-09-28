@@ -1,9 +1,11 @@
-package bao.bon.gen2_controller;
+package bao.bon.gen2_controller.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+
+import bao.bon.gen2_controller.R;
 
 public class MainActivity extends AppCompatActivity {
 

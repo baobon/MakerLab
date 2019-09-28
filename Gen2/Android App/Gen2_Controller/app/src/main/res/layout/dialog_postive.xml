@@ -1,22 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="5dp">
 
+    <TextView
+        android:layout_marginTop="5dp"
+        android:textColor="@android:color/holo_red_dark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_Tittle"
+        android:textSize="18sp"
+        android:fontFamily="@font/eater"
+        android:gravity="center"
+        />
+
     <LinearLayout
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:weightSum="10"
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_weight="9"
+            android:layout_weight="1"
+            android:fontFamily="@font/eater"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SERVO_ONE_POSTIVE"
+            android:text="Servo_One : Last_Position:"
             />
+
+        <TextView
+            android:textColor="@android:color/holo_green_dark"
+            android:id="@+id/lastposition_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_weight="8"
+            android:text="45" />
 
         <Spinner
             android:layout_weight="1"
@@ -24,7 +45,7 @@
             android:gravity="right"
             android:id="@+id/spinner_postive_one"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
         </Spinner>
 
     </LinearLayout>
@@ -38,11 +59,21 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_weight="9"
+            android:layout_weight="1"
+            android:fontFamily="@font/eater"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SERVO_TWO_POSTIVE"
+            android:text="SERVO_TWO : Last_Position:"
             />
+
+        <TextView
+            android:textColor="@android:color/holo_green_dark"
+            android:id="@+id/lastposition_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_weight="8"
+            android:text="45" />
 
         <Spinner
             android:layout_weight="1"

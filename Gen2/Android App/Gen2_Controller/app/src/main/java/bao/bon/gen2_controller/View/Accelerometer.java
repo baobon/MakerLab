@@ -1,4 +1,4 @@
-package bao.bon.gen2_controller;
+package bao.bon.gen2_controller.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -32,6 +32,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import bao.bon.gen2_controller.Constructor.Common;
+import bao.bon.gen2_controller.R;
 
 public class Accelerometer extends AppCompatActivity implements SensorEventListener {
 
@@ -275,7 +276,7 @@ public class Accelerometer extends AppCompatActivity implements SensorEventListe
                 + "Speed=" + commondata.getSpeed() + ","
                 + "Direction=" + commondata.getDirection() + ","
                 + "Servo_one=" + commondata.getServo_one() + ","
-                + "Servo_two=" + commondata.getGetServo_two() + ","
+                + "Servo_two=" + commondata.getServo_two() + ","
                 + "Led=" + commondata.getLed() + ",";
         return dataSend;
     }
