@@ -121,7 +121,7 @@ public class G_Main extends AppCompatActivity {
         /*
             Mode intent Activity !!!!
         */
-        selectMode();
+//        selectMode();
 
         /*
             Preferences Data servo_post intent
